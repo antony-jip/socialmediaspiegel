@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
 import { Beeldmerk } from '@/components/Merk';
 import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
+import { RUIMTES } from '@/lib/inhoud';
 
 const OntwerpCtx = createContext(null);
 export const useOntwerp = () => useContext(OntwerpCtx);
@@ -349,6 +350,7 @@ function Video({ stream }) {
 export function Ontwerper() {
   const { cfg, zet, logo, setLogo } = useOntwerp();
   const [stream, setStream] = useState(null);
+  const [ruimte, setRuimte] = useState(RUIMTES[0]);
   const [logoFout, setLogoFout] = useState('');
 
   const kiesLogo = (e) => {
@@ -373,7 +375,15 @@ export function Ontwerper() {
       </div>
 
       <div className="ontwerp__beeld">
-        <Muur foto="/foto/salon.jpg" kleur="var(--blush)" cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
+        <Muur foto={ruimte.foto} kleur={ruimte.kleur} cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
+        <div className="ruimtes" role="group" aria-label="Bekijk hem in">
+          <span>Bekijk in</span>
+          {RUIMTES.map((r) => (
+            <button key={r.id} type="button" className={r.id === ruimte.id ? 'is-aan' : ''} aria-pressed={r.id === ruimte.id} onClick={() => setRuimte(r)}>
+              <i style={{ background: r.kleur }} />{r.label}
+            </button>
+          ))}
+        </div>
         <Camera onStream={setStream} />
       </div>
 
@@ -419,8 +429,8 @@ export function Ontwerper() {
         </div>
 
         <div className="groep">
-          <h3>Vorm en maat</h3>
-          <Keuze label="Vorm" waarde={cfg.vorm} opties={{ telefoon: 'Telefoon', post: 'Post' }} onKies={(v) => zet('vorm', v)} />
+          <h3>Model en maat</h3>
+          <Keuze label="Model" waarde={cfg.vorm} opties={{ telefoon: 'De Story · telefoonvorm', post: 'De Post · postvorm' }} onKies={(v) => zet('vorm', v)} />
           <Keuze label="Formaat" waarde={cfg.formaat} opties={formaten} onKies={(v) => zet('formaat', v)} />
         </div>
 
@@ -445,13 +455,15 @@ export function Ontwerper() {
 }
 
 /* ---------------------------------------------------------------- voorbeelden */
-export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen', meer = false }) {
+// Neemt het ontwerp over, maar houdt de eigen naam, regel en likes van de bezoeker.
+export function useGebruikOntwerp() {
   const { setCfg } = useOntwerp();
   const router = useRouter();
-  const gebruik = (cfg) => {
-    setCfg((c) => ({ ...c, ...cfg }));
-    router.push('/ontwerpen');
-  };
+  return (ontwerp) => { setCfg((c) => ({ ...c, ...ontwerp })); router.push('/ontwerpen'); };
+}
+
+export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen', meer = false }) {
+  const gebruik = useGebruikOntwerp();
   return (
     <section className="voorbeelden" id="voorbeelden">
       <div className="voorbeelden__kop">
@@ -460,15 +472,16 @@ export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen', meer = 
       </div>
       <div className={`voorbeelden__rij${items.length > 3 ? ' voorbeelden__rij--veel' : ''}`}>
         {items.map((v) => (
-          <figure key={v.cfg.naam}>
-            <Muur foto={v.foto} kleur={v.kleur} cfg={v.cfg} />
+          <figure key={v.id}>
+            <img className="voorbeelden__foto" src={v.beeld} alt={v.alt} loading="lazy" />
             <figcaption>
-              <span><b>{v.tag}</b>{VORMEN[v.cfg.vorm].label} · {kaderNaam(v.cfg)} · {LED[v.cfg.led].label}</span>
+              <span><b>{v.tag}</b>{VORMEN[v.cfg.vorm].label} · {kaderNaam(v.cfg)} · {LED[v.cfg.led].label} · {euro(prijsVan(v.cfg))}</span>
               <button type="button" className="knop knop--zacht knop--klein" onClick={() => gebruik(v.cfg)}>Gebruik dit ontwerp</button>
             </figcaption>
           </figure>
         ))}
       </div>
+      <p className="voorbeelden__noot">Impressiebeelden. Echte foto’s volgen zodra de eerste spiegels hangen.</p>
     </section>
   );
 }
@@ -508,7 +521,7 @@ export function Bestellen() {
           </div>
           <dl>
             <div><dt>Account</dt><dd>@{cfg.naam || 'jouwnaam'}</dd></div>
-            <div><dt>Vorm</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
+            <div><dt>Model</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
             <div><dt>Kader</dt><dd>{kaderNaam(cfg)}</dd></div>
             <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
             <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
