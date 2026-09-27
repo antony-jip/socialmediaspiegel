@@ -13,8 +13,9 @@ CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # ---- maatvoering (afgeleid van de spiegel op de site: 1 cqw = 6 mm) ----
 W, H, R = 600, 1200, 72                     # onder- en bovenplaat Dibond
-MX, MY, MW, MH, MR = 30, 180, 540, 860, 15  # spiegelglas
-VENSTER = (MX - .5, MY - .5, MW + 1, MH + 1, MR + .5)  # uitsparing bovenplaat, 0,5 mm speling rondom
+MX, MY, MW, MH, MR = 30, 180, 540, 860, 0   # spiegelglas, rechte hoeken
+FREES_R = 1.5                                # venster frezen met Ø 3 mm: binnenhoek R1,5
+VENSTER = (MX - .5, MY - .5, MW + 1, MH + 1, FREES_R)  # uitsparing bovenplaat, 0,5 mm speling rondom
 KI, KB, KD = 60, 20, 40                     # koker: inspringen, breedte, diepte
 FX, FY, FW, FH = KI, KI, W - 2 * KI, H - 2 * KI
 SLEUTEL = [(150, 70), (450, 70)]            # sleutelgatplaatjes, h.o.h. 300
@@ -151,7 +152,7 @@ def blad1():
     o.append(maat_v(oy + MY * s, oy + (MY + MH) * s, ox + W * s + 5, "860", ox + (MX + MW) * s))
     o.append(maat_v(oy, oy + MY * s, ox + W * s + 10, "180", ox + W * s))
     o.append(maat_v(oy + (MY + MH) * s, oy + H * s, ox + W * s + 10, "160", ox + W * s))
-    o.append(tekst(ox, oy + H * s + 12, "R72 buitenhoeken · R15 spiegel", "klein"))
+    o.append(tekst(ox, oy + H * s + 12, "R72 buitenhoeken · spiegel rechte hoeken", "klein"))
     o.append(tekst(ox, oy + H * s + 15.5, "wit = bovenplaat 4 mm met folie · roze = opdruk", "klein"))
 
     # achteraanzicht (gespiegeld getekend: links = rechts van voorkant)
@@ -216,9 +217,9 @@ def blad1():
     o.append(tekst(sx, sy, "Stuklijst (per spiegel)", "kop"))
     regels = [
         ("1", "1", "Onderplaat Dibond 3 mm, 600 × 1200, R72"),
-        ("2", "1", "Bovenplaat Dibond 4 mm, 600 × 1200, R72, venster 541 × 861 R15,5"),
+        ("2", "1", "Bovenplaat Dibond 4 mm, 600 × 1200, R72, venster 541 × 861, frees Ø 3"),
         ("3", "1", "Bedrukte cast-folie + laminaat op bovenplaat, vóór frezen (of UV-print)"),
-        ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, R15, gepolijst"),
+        ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, rechte hoeken, randen geslepen"),
         ("5", "1", f"Ring alu koker 40 × 20 × 2, buitenmaat 480 × 1080 ({nl(omtrek_koker, 2)} m)"),
         ("6", f"{nl(omtrek_koker, 1)} m", "LED COB 24 V ± 10 W/m, 2700 K / 6000 K of CCT, in opbouwprofiel"),
         ("7", "1", f"Voeding 24 V 48–60 W stekkeradapter CE + inline schakelaar (LED ± {led_w:.0f} W)"),
@@ -283,7 +284,7 @@ def blad2():
     o.append(tekst(wx, wy - 12, "Werkvolgorde", "kop"))
     stappen = [
         ["Folie printen, lamineren en op de 4 mm plaat zetten."],
-        ["Frezen: onderplaat contour, bovenplaat contour + venster", "door de folie heen (bestanden onder/boven)."],
+        ["Frezen: onderplaat contour, bovenplaat contour + venster", "door de folie heen. Venster met Ø 3 mm, niet dikker."],
         ["Onderplaat tegen de nokken, bovenplaat erop met VHB,", "randen gelijk tegen dezelfde nokken."],
         ["Spiegel in het venster: VHB-stroken + verticale rupsen", "spiegelkit, niet vol-vlaks. Voorvlak gelijk met folie."],
         ["Omdraaien, mal C tegen de nokken, koker verlijmen."],
@@ -344,6 +345,10 @@ def dxf(naam, lagen):
                 cirkel(laag, *v[1:])
                 continue
             x, y, w, h, r = v
+            if r <= 0:
+                for a, b in [((x, y), (x + w, y)), ((x + w, y), (x + w, y + h)), ((x + w, y + h), (x, y + h)), ((x, y + h), (x, y))]:
+                    lijn(laag, *a, *b)
+                continue
             lijn(laag, x + r, y, x + w - r, y)
             lijn(laag, x + w, y + r, x + w, y + h - r)
             lijn(laag, x + w - r, y + h, x + r, y + h)

@@ -202,7 +202,7 @@ img { display: block; max-width: 100%; }
 .spiegel__glas {
   position: relative;
   flex: 1;
-  border-radius: 2.5cqw;
+  border-radius: 0;
   overflow: hidden;
   background: linear-gradient(160deg, #d9dee5 0%, #f6f8fa 28%, #bfc6cf 55%, #edf0f3 76%, #b3bcc6 100%);
 }
