@@ -1,10 +1,11 @@
-import { euro, formaatVan, KADERS, LED, prijsVan, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, HEX, KADERS, kaderNaam, LED, prijsVan, VORMEN } from '@/lib/spiegel';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 
 export async function POST(req) {
   const { cfg, logo, contact } = await req.json().catch(() => ({}));
-  if (!cfg || !VORMEN[cfg.vorm] || !LED[cfg.led] || !KADERS[cfg.kader]) {
+  const kaderOk = cfg && (KADERS[cfg.kader] || (cfg.kader === 'eigen' && HEX.test(cfg.kaderKleur ?? '')));
+  if (!cfg || !VORMEN[cfg.vorm] || !LED[cfg.led] || !kaderOk) {
     return Response.json({ fout: 'Je ontwerp is niet compleet. Kies vorm, licht en kader.' }, { status: 400 });
   }
   if (!contact?.naam || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email ?? '')) {
@@ -18,10 +19,10 @@ export async function POST(req) {
   const rijen = [
     ['Naam', contact.naam], ['Bedrijf', contact.bedrijf], ['E-mail', contact.email], ['Telefoon', contact.telefoon],
     ['Account', `@${cfg.naam}`], ['Regel eronder', cfg.ondertitel], ['Likes / reacties', `${cfg.likes} / ${cfg.reacties}`],
-    ['Vorm', `${VORMEN[cfg.vorm].label}, ${formaatVan(cfg).maat}`], ['Licht', LED[cfg.led].label], ['Kader', KADERS[cfg.kader]],
+    ['Vorm', `${VORMEN[cfg.vorm].label}, ${formaatVan(cfg).maat}`], ['Licht', LED[cfg.led].label], ['Kader', kaderNaam(cfg)],
     ['Prijs', euro(prijsVan(cfg))], ['Opmerking', contact.opmerking],
   ];
-  const html = `<h2>Nieuwe spiegelaanvraag</h2><table>${rijen
+  const html = `<h2>Nieuwe spiegelbestelling (proef sturen)</h2><table>${rijen
     .map(([k, v]) => `<tr><td><b>${k}</b></td><td>${esc(v)}</td></tr>`)
     .join('')}</table>`;
 
@@ -33,7 +34,7 @@ export async function POST(req) {
       from: MAIL_VAN,
       to: AANVRAAG_NAAR,
       reply_to: contact.email,
-      subject: `Spiegelaanvraag @${cfg.naam} · ${euro(prijsVan(cfg))}`,
+      subject: `Spiegelbestelling @${cfg.naam} · ${euro(prijsVan(cfg))}`,
       html,
       attachments: bijlage ? [{ filename: `logo.${bijlage[1]}`, content: bijlage[2] }] : undefined,
     }),

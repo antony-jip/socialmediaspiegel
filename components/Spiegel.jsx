@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { kort, VORMEN } from '@/lib/spiegel';
+import { kaderKleur, kort, opKader, VORMEN } from '@/lib/spiegel';
 
 const Hart = ({ vol }) => (
   <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -47,6 +47,8 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
   const likes = Number(cfg.likes || 0) + extra;
   const telefoon = cfg.vorm === 'telefoon';
   const initiaal = (cfg.naam || '?').replace('@', '').charAt(0).toUpperCase();
+  const kader = kaderKleur(cfg);
+  const accent = kader.toLowerCase() === '#ff2d87' ? '#ffffff' : '#ff2d87';
 
   const like = () => {
     setExtra((e) => (e ? 0 : 1));
@@ -55,8 +57,8 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
 
   return (
     <div
-      className={`spiegel spiegel--${cfg.vorm} kader--${cfg.kader} led--${cfg.led}`}
-      style={{ aspectRatio: VORMEN[cfg.vorm].ratio }}
+      className={`spiegel spiegel--${cfg.vorm} led--${cfg.led}`}
+      style={{ aspectRatio: VORMEN[cfg.vorm].ratio, '--kader': kader, '--op': opKader(kader), '--accent': accent }}
     >
       <div className="spiegel__lijf">
         {telefoon && (

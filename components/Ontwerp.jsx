@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Spiegel from '@/components/Spiegel';
-import { euro, formaatVan, KADERS, LED, prijsVan, START, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
 
 const OntwerpCtx = createContext(null);
 export const useOntwerp = () => useContext(OntwerpCtx);
@@ -11,12 +11,15 @@ export function OntwerpProvider({ children }) {
   const [cfg, setCfg] = useState(START);
   const [logo, setLogo] = useState(null);
   const zet = (k, v) => setCfg((c) => ({ ...c, [k]: v }));
-  return <OntwerpCtx.Provider value={{ cfg, zet, logo, setLogo }}>{children}</OntwerpCtx.Provider>;
+  return <OntwerpCtx.Provider value={{ cfg, setCfg, zet, logo, setLogo }}>{children}</OntwerpCtx.Provider>;
 }
 
-export function Muur({ foto, kleur, cfg, logo, video, interactief, children }) {
+export function Muur({ foto, kleur, cfg, logo, video, interactief, className = '', children }) {
   return (
-    <div className={`muur muur--${cfg.vorm} muur--${cfg.formaat}`} style={{ '--muur': kleur, backgroundImage: foto ? `url(${foto})` : undefined }}>
+    <div
+      className={`muur muur--${cfg.vorm} muur--${cfg.formaat} ${className}`}
+      style={{ '--muur': kleur, backgroundImage: foto ? `url(${foto})` : undefined }}
+    >
       <div className="muur__hanger">
         <Spiegel cfg={cfg} logo={logo} video={video} interactief={interactief} />
       </div>
@@ -25,6 +28,68 @@ export function Muur({ foto, kleur, cfg, logo, video, interactief, children }) {
   );
 }
 
+const Vinkje = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 12.5 9.5 17.5 19.5 6.5" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+);
+
+export function Zekerheid() {
+  return (
+    <ul className="zekerheid">
+      <li><Vinkje />Eerst een digitale proef</li>
+      <li><Vinkje />Je betaalt pas na akkoord</li>
+      <li><Vinkje />Gratis verzending</li>
+    </ul>
+  );
+}
+
+/* ---------------------------------------------------------------- hero */
+export function Hero() {
+  const { cfg, logo } = useOntwerp();
+  const show = { ...cfg, led: cfg.led === 'uit' ? 'rgb' : cfg.led };
+  return (
+    <section className="hero">
+      <div className="hero__tekst">
+        <p className="hero__voor">Voor salons, barbers en horeca</p>
+        <h1>Een spiegel die gepost wil worden.</h1>
+        <p className="hero__lead">Jouw naam en logo op een spiegel in de vorm van een social post. Elke selfie die ervoor gemaakt wordt, is reclame voor jou.</p>
+        <div className="hero__acties">
+          <a className="knop knop--roze knop--groot" href="#ontwerp">Ontwerp de jouwe</a>
+          <span className="hero__prijs">vanaf <b>{euro(VANAF)}</b></span>
+        </div>
+        <Zekerheid />
+      </div>
+      <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={show} logo={logo} className="hero__muur" interactief />
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- reclame */
+export function Reclame() {
+  const { cfg, logo } = useOntwerp();
+  return (
+    <section className="reclame">
+      <div className="reclame__tekst">
+        <h2>Elke selfie is reclame.</h2>
+        <p className="reclame__lead">Wie voor jouw spiegel staat, zet jouw naam in zijn story. Zonder dat je erom vraagt.</p>
+        <dl className="reclame__punten">
+          <div><dt>Je naam staat in de foto</dt><dd>Niet in een tag die je kunt wegklikken, maar in het beeld zelf.</dd></div>
+          <div><dt>Klanten taggen je vanzelf</dt><dd>Je accountnaam staat erop, dus ze weten precies wie ze moeten taggen.</dd></div>
+          <div><dt>Een plek die mensen opzoeken</dt><dd>Een fotoplek waar klanten voor terugkomen, en hun vrienden ook.</dd></div>
+        </dl>
+      </div>
+      <div className="telefoon" aria-label="Voorbeeld van een story met jouw spiegel">
+        <div className="telefoon__scherm">
+          <Muur foto="/foto/nagels.jpg" kleur="var(--roze)" cfg={{ ...cfg, vorm: 'telefoon', formaat: 'm', led: cfg.led === 'uit' ? 'koel' : cfg.led }} logo={logo} className="telefoon__muur" />
+          <div className="story__balk"><i className="is-vol" /><i /><i /></div>
+          <div className="story__kop"><span className="story__avatar" />jouwklant <small>2 u</small></div>
+          <span className="story__tag">@{cfg.naam || 'jouwnaam'}</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- ontwerper */
 function Keuze({ label, waarde, opties, onKies }) {
   return (
     <fieldset className="keuze">
@@ -36,6 +101,32 @@ function Keuze({ label, waarde, opties, onKies }) {
             {tekst}
           </label>
         ))}
+      </div>
+    </fieldset>
+  );
+}
+
+function Kaderkleur() {
+  const { cfg, zet } = useOntwerp();
+  return (
+    <fieldset className="keuze">
+      <legend>Kleur kader <span className="keuze__waarde">{kaderNaam(cfg)}</span></legend>
+      <div className="stalen">
+        {Object.entries(KADERS).map(([id, k]) => (
+          <label key={id} className={`staal${cfg.kader === id ? ' is-aan' : ''}`} style={{ '--staal': k.kleur }} title={k.label}>
+            <input type="radio" name="kader" checked={cfg.kader === id} onChange={() => zet('kader', id)} aria-label={k.label} />
+          </label>
+        ))}
+        <label className={`staal staal--eigen${cfg.kader === 'eigen' ? ' is-aan' : ''}`} style={{ '--staal': cfg.kaderKleur }}>
+          <input
+            type="color"
+            value={cfg.kaderKleur}
+            onChange={(e) => { zet('kaderKleur', e.target.value); zet('kader', 'eigen'); }}
+            onClick={() => zet('kader', 'eigen')}
+            aria-label="Kies je eigen kleur"
+          />
+          <span>Eigen kleur</span>
+        </label>
       </div>
     </fieldset>
   );
@@ -69,7 +160,7 @@ function Camera({ onStream }) {
 
   return (
     <div className="camera">
-      <button type="button" className="knop knop--wit" onClick={wissel}>
+      <button type="button" className="knop knop--wit knop--klein" onClick={wissel}>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5h4l1.5-2.5h7L17 7.5h4v12H3z M12 16.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
         {aan ? 'Zet camera uit' : 'Kijk erin'}
       </button>
@@ -102,32 +193,44 @@ export function Ontwerper() {
     r.readAsDataURL(f);
   };
 
-  const formaten = Object.fromEntries(VORMEN[cfg.vorm].formaten.map((f) => [f.id, f.maat]));
+  const formaten = Object.fromEntries(VORMEN[cfg.vorm].formaten.map((f) => [f.id, `${f.maat} · ${euro(f.prijs)}`]));
   const ledOpties = Object.fromEntries(Object.entries(LED).map(([id, l]) => [id, l.prijs ? `${l.label} +${euro(l.prijs)}` : l.label]));
 
   return (
     <section className="ontwerp" id="ontwerp">
-      <div className="ontwerp__tekst">
-        <h1>Een spiegel die gepost wil worden.</h1>
-        <p className="ontwerp__lead">Een spiegel in de vorm van een social post, met jouw naam en logo erop. Met of zonder licht. Je klanten maken er een selfie. Jij krijgt de tag.</p>
+      <div className="ontwerp__kop">
+        <h2>Ontwerp je spiegel.</h2>
+        <p>Je ziet meteen hoe hij wordt. Tik op het hartje, of kijk er zelf in.</p>
+      </div>
 
-        <div className="paneel">
+      <div className="ontwerp__beeld">
+        <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
+        <Camera onStream={setStream} />
+      </div>
+
+      <div className="paneel">
+        <div className="groep">
+          <h3>Jouw account</h3>
           <div className="veld-rij">
             <label className="veld">
               <span>Accountnaam</span>
-              <input value={cfg.naam} maxLength={24} onChange={(e) => zet('naam', e.target.value.replace(/\s/g, '').toLowerCase())} />
+              <span className="veld__at">
+                <i>@</i>
+                <input value={cfg.naam} maxLength={24} onChange={(e) => zet('naam', e.target.value.replace(/[\s@]/g, '').toLowerCase())} />
+              </span>
             </label>
             <label className="veld">
               <span>Regel eronder</span>
               <input value={cfg.ondertitel} maxLength={32} onChange={(e) => zet('ondertitel', e.target.value)} />
             </label>
           </div>
-
           <div className="veld-rij">
-            <label className="veld veld--upload">
+            <label className="veld">
               <span>Logo</span>
               <span className="upload">
-                {logo ? <img src={logo} alt="" /> : null}
+                {logo ? <img src={logo} alt="" /> : (
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4m0 0-4.5 4.5M12 4l4.5 4.5M4 15v5h16v-5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                )}
                 {logo ? 'Kies een ander logo' : 'Upload je logo'}
                 <input type="file" accept="image/*" onChange={kiesLogo} />
               </span>
@@ -144,31 +247,60 @@ export function Ontwerper() {
               </label>
             </div>
           </div>
+        </div>
 
+        <div className="groep">
+          <h3>Vorm en maat</h3>
           <Keuze label="Vorm" waarde={cfg.vorm} opties={{ telefoon: 'Telefoon', post: 'Post' }} onKies={(v) => zet('vorm', v)} />
           <Keuze label="Formaat" waarde={cfg.formaat} opties={formaten} onKies={(v) => zet('formaat', v)} />
-          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} />
-          <Keuze label="Kader" waarde={cfg.kader} opties={KADERS} onKies={(v) => zet('kader', v)} />
-
-          <div className="totaal">
-            <div>
-              <span className="totaal__prijs">{euro(prijsVan(cfg))}</span>
-              <span className="totaal__uitleg">{formaatVan(cfg).maat} · incl. btw · gratis verzending</span>
-            </div>
-            <a className="knop knop--roze" href="#aanvraag">Vraag je spiegel aan</a>
-          </div>
         </div>
-      </div>
 
-      <div className="ontwerp__beeld">
-        <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
-        <Camera onStream={setStream} />
+        <div className="groep">
+          <h3>Kleur en licht</h3>
+          <Kaderkleur />
+          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} />
+        </div>
+
+        <div className="totaal">
+          <div>
+            <span className="totaal__prijs">{euro(prijsVan(cfg))}</span>
+            <span className="totaal__uitleg">{formaatVan(cfg).maat} · {LED[cfg.led].label} · incl. btw</span>
+          </div>
+          <a className="knop knop--roze knop--groot" href="#bestellen">Bestel je spiegel</a>
+        </div>
+        <Zekerheid />
       </div>
     </section>
   );
 }
 
-export function Aanvraag() {
+/* ---------------------------------------------------------------- voorbeelden */
+export function Voorbeelden({ items }) {
+  const { setCfg } = useOntwerp();
+  const gebruik = (cfg) => {
+    setCfg((c) => ({ ...c, ...cfg }));
+    document.getElementById('ontwerp')?.scrollIntoView({ behavior: 'smooth' });
+  };
+  return (
+    <section className="voorbeelden">
+      <h2>Zo hangt hij bij anderen.</h2>
+      <div className="voorbeelden__rij">
+        {items.map((v) => (
+          <figure key={v.tag}>
+            <Muur foto={v.foto} kleur={v.kleur} cfg={v.cfg} />
+            <figcaption>
+              <span><b>{v.tag}</b>{VORMEN[v.cfg.vorm].label} · {kaderNaam(v.cfg)} · {LED[v.cfg.led].label}</span>
+              <button type="button" className="knop knop--inkt knop--klein" onClick={() => gebruik(v.cfg)}>Gebruik dit ontwerp</button>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- bestellen */
+export function Bestellen() {
   const { cfg, logo } = useOntwerp();
   const [staat, setStaat] = useState({ fase: 'leeg', melding: '' });
 
@@ -183,7 +315,7 @@ export function Aanvraag() {
         body: JSON.stringify({ cfg, logo, contact: velden }),
       });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.fout || 'Versturen lukte niet. Probeer het opnieuw.');
+      if (!res.ok) throw new Error(data.fout || 'Bestellen lukte niet. Probeer het opnieuw.');
       setStaat({ fase: 'klaar', melding: velden.email });
     } catch (err) {
       setStaat({ fase: 'fout', melding: err.message });
@@ -191,24 +323,30 @@ export function Aanvraag() {
   };
 
   return (
-    <section className="aanvraag" id="aanvraag">
-      <div className="aanvraag__kop">
-        <h2>Klaar met ontwerpen?</h2>
-        <p>Stuur je ontwerp in. Je krijgt eerst een digitale proef, en we maken hem pas als jij akkoord geeft.</p>
-        <dl className="bon">
-          <div><dt>Account</dt><dd>@{cfg.naam || 'jouwnaam'}</dd></div>
-          <div><dt>Vorm</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
-          <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
-          <div><dt>Kader</dt><dd>{KADERS[cfg.kader]}</dd></div>
-          <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
-          <div className="bon__totaal"><dt>Totaal</dt><dd>{euro(prijsVan(cfg))}</dd></div>
-        </dl>
+    <section className="bestellen" id="bestellen">
+      <div className="bestellen__kop">
+        <h2>Bijna klaar.</h2>
+        <p>Laat je gegevens achter. Je krijgt eerst een digitale proef. We maken hem pas, en je betaalt pas, als jij akkoord geeft.</p>
+        <div className="bon">
+          <div className="bon__mini">
+            <Spiegel cfg={cfg} logo={logo} />
+          </div>
+          <dl>
+            <div><dt>Account</dt><dd>@{cfg.naam || 'jouwnaam'}</dd></div>
+            <div><dt>Vorm</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
+            <div><dt>Kader</dt><dd>{kaderNaam(cfg)}</dd></div>
+            <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
+            <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
+            <div className="bon__totaal"><dt>Totaal</dt><dd>{euro(prijsVan(cfg))}</dd></div>
+          </dl>
+          <a className="bon__terug" href="#ontwerp">Pas je ontwerp aan</a>
+        </div>
       </div>
 
       {staat.fase === 'klaar' ? (
         <div className="bedankt" role="status">
-          <h3>Aanvraag verstuurd.</h3>
-          <p>Je proef komt binnen één werkdag naar {staat.melding}.</p>
+          <h3>Bestelling ontvangen.</h3>
+          <p>Je proef komt binnen één werkdag naar {staat.melding}. Keur je hem goed, dan gaan we maken.</p>
         </div>
       ) : (
         <form className="formulier" onSubmit={verstuur}>
@@ -216,13 +354,41 @@ export function Aanvraag() {
           <label className="veld"><span>Bedrijf</span><input name="bedrijf" autoComplete="organization" /></label>
           <label className="veld"><span>E-mail</span><input name="email" type="email" required autoComplete="email" /></label>
           <label className="veld"><span>Telefoon</span><input name="telefoon" type="tel" autoComplete="tel" /></label>
-          <label className="veld veld--breed"><span>Opmerking</span><textarea name="opmerking" rows={3} placeholder="Ander formaat, eigen kleur, levering voor een opening?" /></label>
+          <label className="veld veld--breed"><span>Opmerking</span><textarea name="opmerking" rows={3} placeholder="Ander formaat, logo in het kader, levering voor een opening?" /></label>
           {staat.fase === 'fout' && <p className="fout veld--breed" role="alert">{staat.melding}</p>}
-          <button className="knop knop--roze veld--breed" disabled={staat.fase === 'bezig'}>
-            {staat.fase === 'bezig' ? 'Aanvraag versturen...' : 'Verstuur je aanvraag'}
+          <button className="knop knop--roze knop--groot veld--breed" disabled={staat.fase === 'bezig'}>
+            {staat.fase === 'bezig' ? 'Bestelling versturen...' : `Bestel je spiegel · ${euro(prijsVan(cfg))}`}
           </button>
+          <div className="veld--breed"><Zekerheid /></div>
         </form>
       )}
     </section>
+  );
+}
+
+/* ---------------------------------------------------------------- mobiele balk */
+export function MobielBalk() {
+  const { cfg } = useOntwerp();
+  const [zicht, setZicht] = useState(false);
+
+  useEffect(() => {
+    const ontwerp = document.getElementById('ontwerp');
+    const bestel = document.getElementById('bestellen');
+    if (!ontwerp || !bestel) return;
+    const staat = { ontwerp: false, bestel: false };
+    const io = new IntersectionObserver((items) => {
+      items.forEach((i) => { staat[i.target === ontwerp ? 'ontwerp' : 'bestel'] = i.isIntersecting; });
+      setZicht(staat.ontwerp && !staat.bestel);
+    });
+    io.observe(ontwerp);
+    io.observe(bestel);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div className={`mobielbalk${zicht ? ' is-zicht' : ''}`} aria-hidden={!zicht}>
+      <span><b>{euro(prijsVan(cfg))}</b>{formaatVan(cfg).maat}</span>
+      <a className="knop knop--roze" href="#bestellen" tabIndex={zicht ? 0 : -1}>Bestel je spiegel</a>
+    </div>
   );
 }
