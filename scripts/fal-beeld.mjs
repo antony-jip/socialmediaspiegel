@@ -6,14 +6,15 @@ const MODEL = 'fal-ai/nano-banana-2';
 const BASIS =
   'Straight-on frontal interior photograph at eye level, camera perfectly parallel to the wall, no perspective distortion. ' +
   'The center of the wall is completely empty and bare, a large clean area with nothing hanging on it. ' +
-  'Bright even daylight, crisp, vivid saturated color, real photography, 35mm, sharp. ' +
+  'Bright even daylight, crisp, soft pastel color, airy and fresh, real photography, 35mm, sharp. ' +
   'Absolutely no text, no words, no letters, no logos, no signs, no mirrors, no frames, no pictures, no posters on the wall.';
 
 const SCENES = {
-  salon: 'A beauty salon wall painted in vivid cobalt blue. At the bottom edge a white leather salon chair on the left and a tall green plant on the right, both small in frame.',
-  kapper: 'A hair salon wall painted in sunny saturated yellow. At the bottom edge the top of a black barber chair on the right and a small trolley with combs on the left, both small in frame.',
-  nagels: 'A nail studio wall painted in hot pink. At the bottom edge a white nail table with a small lamp and a few nail polish bottles, small in frame.',
-  horeca: 'A cafe wall with glossy emerald green square tiles. At the bottom edge a wooden bench with a mustard cushion and a small round table with a coffee cup, small in frame.',
+  salon: 'A beauty salon wall painted in soft blush pink pastel. At the bottom edge a cream boucle salon chair on the left and a tall green plant in a white pot on the right, both small in frame. Light oak floor.',
+  kapper: 'A hair salon wall painted in soft sage mint pastel green. At the bottom edge the top of a cognac leather barber chair on the right and a small white trolley with combs on the left, both small in frame.',
+  nagels: 'A nail studio wall painted in soft lilac lavender pastel. At the bottom edge a white nail table with a small arched lamp and a few pastel nail polish bottles, small in frame.',
+  horeca: 'A cafe wall painted in soft butter yellow pastel with a thin white wainscot. At the bottom edge a light wooden bench with a peach cushion and a small round marble table with a latte, small in frame.',
+  wimpers: 'A lash and brow studio wall painted in soft powder blue pastel. At the bottom edge a white treatment bed with a folded peach towel and a small ring light, small in frame.',
 };
 
 const key = process.env.FAL_KEY;

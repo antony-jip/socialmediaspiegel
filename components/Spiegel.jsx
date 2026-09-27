@@ -48,7 +48,7 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
   const telefoon = cfg.vorm === 'telefoon';
   const initiaal = (cfg.naam || '?').replace('@', '').charAt(0).toUpperCase();
   const kader = kaderKleur(cfg);
-  const accent = kader.toLowerCase() === '#ff2d87' ? '#ffffff' : '#ff2d87';
+  const accent = kader.toLowerCase() === '#e23b7e' ? '#ffffff' : '#e23b7e';
 
   const [vlucht, setVlucht] = useState([]);
   const [groot, setGroot] = useState(0);

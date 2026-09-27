@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
-import { Decor, Glans } from '@/components/Merk';
+import { Beeldmerk } from '@/components/Merk';
 import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
 
 const OntwerpCtx = createContext(null);
@@ -108,8 +108,6 @@ export function Hero() {
   const show = { ...cfg, led: cfg.led === 'uit' ? 'rgb' : cfg.led };
   return (
     <section className="hero" id="top">
-      <Glans className="hero__glans" />
-      <Decor items={[['ster', 'var(--geel)', 3, 78, 34, 0], ['hart', 'var(--roze)', 44, 10, 26, -12], ['ring', 'var(--geel)', 48, 84, 40], ['ster', '#fff', 93, 6, 22], ['at', '#fff', 41, 58, 30, 10], ['rondje', 'var(--roze)', 96, 88, 18]]} />
       <div className="hero__tekst">
         <div className="hero__stickers">
           <Sticker soort="plek" draai={-4}>Salons · barbers · horeca</Sticker>
@@ -118,13 +116,13 @@ export function Hero() {
         <h1>Een spiegel die <span className="storytekst">gepost</span> wil worden.</h1>
         <p className="hero__lead">Jouw naam en logo op een spiegel in de vorm van een social post. Elke selfie die ervoor gemaakt wordt, is reclame voor jou.</p>
         <div className="hero__acties">
-          <Link className="knop knop--roze knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
+          <Link className="knop knop--framboos knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
           <span className="hero__prijs">vanaf <b>{euro(VANAF)}</b></span>
         </div>
         <Zekerheid />
       </div>
       <div className="hero__beeld">
-        <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={show} logo={logo} className="hero__muur" interactief />
+        <Muur foto="/foto/salon.jpg" kleur="var(--blush)" cfg={show} logo={logo} className="hero__muur" interactief />
         <span className="hero__hint">Dubbeltik op de spiegel</span>
       </div>
     </section>
@@ -133,10 +131,10 @@ export function Hero() {
 
 /* ---------------------------------------------------------------- verhaal */
 const SLIDES = [
-  { kleur: 'kobalt', tekst: <>Wij maken al jaren <span className="storytekst">reclame.</span></> },
-  { kleur: 'geel', tekst: <>Borden. Gevels. Auto’s. Het hangt, het rijdt, het wordt <span className="storytekst">gezien.</span></> },
-  { kleur: 'roze', tekst: <>Maar de beste reclame maakt je <span className="storytekst storytekst--geel">klant zelf.</span></> },
-  { kleur: 'inkt', tekst: <>Dus maakten we een spiegel die gepost <span className="storytekst">wil worden.</span></>, einde: true },
+  { kleur: 'lila', tekst: <>Wij maken al jaren reclame voor ondernemers.</> },
+  { kleur: 'boter', tekst: <>Borden, gevels en auto’s. Ze hangen en rijden, en worden gezien.</> },
+  { kleur: 'blush', tekst: <>Maar de beste reclame maakt je klant zelf.</> },
+  { kleur: 'mint', tekst: <>Dus maakten we een spiegel die gepost wil worden.</>, einde: true },
 ];
 const DUUR = 4500;
 
@@ -168,10 +166,8 @@ export function Verhaal() {
 
   return (
     <section className="verhaal" id="verhaal">
-      <Decor items={[['ster', 'var(--roze)', 4, 12, 30], ['hart', 'var(--geel)', 50, 80, 28, 14], ['ring', 'var(--kobalt)', 92, 8, 36], ['ster', 'var(--kobalt)', 47, 18, 18]]} />
       <div className="verhaal__tekst">
-        <Sticker soort="tekst" draai={-3}>Ons verhaal</Sticker>
-        <h2>Reclame die je klant <span className="storytekst storytekst--roze">zelf maakt.</span></h2>
+        <h2>Reclame die je klant zelf maakt</h2>
         <p>Socialmediaspiegel komt uit de werkplaats van Sign Company. We maken borden, gevelreclame en autobelettering voor ondernemers. Een bord hangt stil. Een spiegel wordt gedeeld.</p>
         <p>Daarom bouwen we hem zoals we alles bouwen: in onze eigen werkplaats, met echt glas, jouw kleuren en jouw naam erop.</p>
       </div>
@@ -187,12 +183,12 @@ export function Verhaal() {
               </i>
             ))}
           </div>
-          <div className="story__kop"><span className="story__avatar story__avatar--merk" />socialmediaspiegel <small>{nu + 1} / {SLIDES.length}</small></div>
+          <div className="story__kop"><span className="story__avatar"><Beeldmerk /></span>socialmediaspiegel <small>{nu + 1} / {SLIDES.length}</small></div>
           <p key={nu} className="slide__tekst">{s.tekst}</p>
           {s.einde && (
             <div className="slide__einde">
-              <div className="slide__spiegel"><Spiegel cfg={{ ...cfg, vorm: 'telefoon', led: 'rgb' }} logo={logo} /></div>
-              <Link className="knop knop--roze" href="/ontwerpen" onClick={(e) => e.stopPropagation()}>Ontwerp de jouwe</Link>
+              <div className="slide__spiegel"><Spiegel cfg={{ ...cfg, vorm: 'telefoon', led: 'warm' }} logo={logo} /></div>
+              <Link className="knop knop--framboos" href="/ontwerpen" onClick={(e) => e.stopPropagation()}>Ontwerp de jouwe</Link>
             </div>
           )}
         </div>
@@ -206,7 +202,6 @@ export function Reclame() {
   const { cfg, logo } = useOntwerp();
   return (
     <section className="reclame" id="reclame">
-      <Decor items={[['ster', 'var(--geel)', 58, 14, 36], ['hart', 'var(--roze)', 94, 70, 30, 12], ['at', 'var(--kobalt)', 3, 88, 30, -8], ['rondje', 'var(--geel)', 62, 90, 16]]} />
       <div className="reclame__tekst">
         <h2>Elke selfie is <span className="storytekst storytekst--geel">reclame.</span></h2>
         <p className="reclame__lead">Wie voor jouw spiegel staat, zet jouw naam in zijn story. Zonder dat je erom vraagt.</p>
@@ -219,7 +214,7 @@ export function Reclame() {
       </div>
       <div className="telefoon" aria-label="Voorbeeld van een story met jouw spiegel">
         <div className="telefoon__scherm">
-          <Muur foto="/foto/nagels.jpg" kleur="var(--roze)" cfg={{ ...cfg, vorm: 'telefoon', formaat: 'm', led: cfg.led === 'uit' ? 'koel' : cfg.led }} logo={logo} className="telefoon__muur" />
+          <Muur foto="/foto/nagels.jpg" kleur="var(--lila)" cfg={{ ...cfg, vorm: 'telefoon', formaat: 'm', led: cfg.led === 'uit' ? 'koel' : cfg.led }} logo={logo} className="telefoon__muur" />
           <div className="story__balk"><i className="is-vol" /><i /><i /></div>
           <div className="story__kop"><span className="story__avatar" />jouwklant <small>2 u</small></div>
           <span className="story__tag">@{cfg.naam || 'jouwnaam'}</span>
@@ -243,10 +238,9 @@ export function Terugverdienen() {
 
   return (
     <section className="terug" id="terugverdienen">
-      <Decor items={[['ster', 'var(--geel)', 90, 10, 40], ['hart', 'var(--roze)', 4, 16, 30, -10], ['rondje', 'var(--geel)', 8, 84, 18], ['ster', '#fff', 60, 88, 20]]} />
       <div className="terug__tekst">
-        <Sticker soort="tekst" draai={-3}>Reken maar uit</Sticker>
-        <h2>Hij verdient zichzelf <span className="storytekst storytekst--geel">terug.</span></h2>
+        <span className="label">Reken maar uit</span>
+        <h2>Hij verdient zichzelf terug</h2>
         <p>Eén nieuwe klant die je vindt via een selfie voor jouw spiegel, en je bent al een stuk op weg. Reken het uit met je eigen getallen.</p>
         <label className="terug__schuif">
           <span>Wat levert een nieuwe klant je gemiddeld op? <b>{euro(perKlant)}</b></span>
@@ -257,7 +251,7 @@ export function Terugverdienen() {
         <span className="terug__getal">{nodig}</span>
         <p className="terug__zin">nieuwe {nodig === 1 ? 'klant' : 'klanten'} en je spiegel van {euro(prijs)} is <b>terugverdiend.</b></p>
         <p className="terug__dag">Hangt hij {JAREN} jaar? Dan kost hij je <b>{euro(Math.round(perDag * 100) / 100).replace(/(,\d)$/, '$10')}</b> per dag.</p>
-        <Link className="knop knop--roze knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
+        <Link className="knop knop--framboos knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
       </div>
     </section>
   );
@@ -372,14 +366,14 @@ export function Ontwerper() {
 
   return (
     <section className="ontwerp" id="ontwerp">
-      <Decor items={[['ster', 'var(--geel)', 90, 4, 34], ['hart', 'var(--roze)', 60, 6, 24, -10], ['ring', 'rgba(255,255,255,.5)', 2, 30, 30]]} />
       <div className="ontwerp__kop">
-        <h2>Ontwerp je <span className="storytekst storytekst--roze">spiegel.</span></h2>
-        <p>Je ziet meteen hoe hij wordt. Tik op het hartje, of kijk er zelf in.</p>
+        <span className="label">Nieuwe spiegel</span>
+        <h1>Ontwerp je spiegel</h1>
+        <p>Je ziet meteen hoe hij wordt. Dubbeltik op het glas, of kijk er zelf in.</p>
       </div>
 
       <div className="ontwerp__beeld">
-        <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
+        <Muur foto="/foto/salon.jpg" kleur="var(--blush)" cfg={cfg} logo={logo} video={<Video stream={stream} />} interactief />
         <Camera onStream={setStream} />
       </div>
 
@@ -442,7 +436,7 @@ export function Ontwerper() {
             <span className="totaal__uitleg">{formaatVan(cfg).maat} · {LED[cfg.led].label} · incl. btw</span>
             <span className="totaal__terug">Terugverdiend na {klantenNodig(prijsVan(cfg), 45)} nieuwe klanten van € 45</span>
           </div>
-          <a className="knop knop--roze knop--groot" href="#bestellen">Bestel je spiegel</a>
+          <a className="knop knop--framboos knop--groot" href="#bestellen">Bestel je spiegel</a>
         </div>
         <Zekerheid />
       </div>
@@ -451,7 +445,7 @@ export function Ontwerper() {
 }
 
 /* ---------------------------------------------------------------- voorbeelden */
-export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen.', meer = false }) {
+export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen', meer = false }) {
   const { setCfg } = useOntwerp();
   const router = useRouter();
   const gebruik = (cfg) => {
@@ -460,10 +454,9 @@ export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen.', meer =
   };
   return (
     <section className="voorbeelden" id="voorbeelden">
-      <Decor items={[['ster', 'var(--roze)', 94, 6, 30], ['hart', 'var(--geel)', 70, 3, 24, 10]]} />
       <div className="voorbeelden__kop">
         <h2>{titel}</h2>
-        {meer && <Link className="knop knop--inkt" href="/voorbeelden">Bekijk alle voorbeelden</Link>}
+        {meer && <Link className="knop knop--zacht" href="/voorbeelden">Bekijk alle voorbeelden</Link>}
       </div>
       <div className={`voorbeelden__rij${items.length > 3 ? ' voorbeelden__rij--veel' : ''}`}>
         {items.map((v) => (
@@ -471,7 +464,7 @@ export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen.', meer =
             <Muur foto={v.foto} kleur={v.kleur} cfg={v.cfg} />
             <figcaption>
               <span><b>{v.tag}</b>{VORMEN[v.cfg.vorm].label} · {kaderNaam(v.cfg)} · {LED[v.cfg.led].label}</span>
-              <button type="button" className="knop knop--inkt knop--klein" onClick={() => gebruik(v.cfg)}>Gebruik dit ontwerp</button>
+              <button type="button" className="knop knop--zacht knop--klein" onClick={() => gebruik(v.cfg)}>Gebruik dit ontwerp</button>
             </figcaption>
           </figure>
         ))}
@@ -506,9 +499,8 @@ export function Bestellen() {
 
   return (
     <section className="bestellen" id="bestellen">
-      <Decor items={[['ster', 'var(--roze)', 46, 8, 34], ['hart', 'var(--kobalt)', 2, 86, 26, -12], ['ring', 'var(--roze)', 95, 90, 34]]} />
       <div className="bestellen__kop">
-        <h2>Bijna klaar.</h2>
+        <h2>Afrekenen</h2>
         <p>Vul je gegevens in en betaal direct via Mollie. Binnen één werkdag krijg je een digitale proef, en we maken hem pas als jij akkoord geeft.</p>
         <div className="bon">
           <div className="bon__mini">
@@ -539,7 +531,7 @@ export function Bestellen() {
           <label className="veld"><span>Telefoon</span><input name="telefoon" type="tel" autoComplete="tel" /></label>
           <label className="veld veld--breed"><span>Opmerking</span><textarea name="opmerking" rows={3} placeholder="Ander formaat, logo in het kader, levering voor een opening?" /></label>
           {staat.fase === 'fout' && <p className="fout veld--breed" role="alert">{staat.melding}</p>}
-          <button className="knop knop--roze knop--groot veld--breed" disabled={staat.fase === 'bezig'}>
+          <button className="knop knop--framboos knop--groot veld--breed" disabled={staat.fase === 'bezig'}>
             {staat.fase === 'bezig' ? 'Naar betalen...' : `Bestel en betaal · ${euro(prijsVan(cfg))}`}
           </button>
           <div className="veld--breed"><Zekerheid /></div>
@@ -571,7 +563,7 @@ export function MobielBalk() {
   return (
     <div className={`mobielbalk${zicht ? ' is-zicht' : ''}`} aria-hidden={!zicht}>
       <span><b>{euro(prijsVan(cfg))}</b>{formaatVan(cfg).maat}</span>
-      <a className="knop knop--roze" href="#bestellen" tabIndex={zicht ? 0 : -1}>Bestel je spiegel</a>
+      <a className="knop knop--framboos" href="#bestellen" tabIndex={zicht ? 0 : -1}>Bestel je spiegel</a>
     </div>
   );
 }

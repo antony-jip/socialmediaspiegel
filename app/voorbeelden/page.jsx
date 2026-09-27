@@ -7,8 +7,8 @@ export const metadata = { title: 'Voorbeelden', description: 'Zo hangt de social
 export default function VoorbeeldenPagina() {
   return (
     <>
-      <Paginakop sticker="Voorbeelden" titel="Kies er een. Maak hem van jou." lead="Zie iets dat je bevalt? Tik op Gebruik dit ontwerp en pas naam, logo en kleur aan." kleur="roze" />
-      <Voorbeelden items={VOORBEELDEN} titel="Per branche." />
+      <Paginakop label="Voorbeelden" titel="Kies er een en maak hem van jou" lead="Zie je iets moois? Tik op Gebruik dit ontwerp en pas naam, logo en kleur aan." kleur="mint" />
+      <Voorbeelden items={VOORBEELDEN} titel="Per branche" />
       <Slotblok />
     </>
   );

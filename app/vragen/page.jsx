@@ -6,7 +6,7 @@ export const metadata = { title: 'Vragen', description: 'Alles over de socialmed
 export default function Vragen() {
   return (
     <>
-      <Paginakop sticker="Vragen" titel="Goed om te weten." kleur="geel" />
+      <Paginakop label="Vragen" titel="Goed om te weten" kleur="boter" />
       <section className="vragen" id="vragen">
         {VRAGEN.map(([v, a]) => (
           <details key={v}><summary>{v}</summary><p>{a}</p></details>
