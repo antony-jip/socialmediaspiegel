@@ -5,8 +5,8 @@ const display = Unbounded({ subsets: ['latin'], weight: ['500', '700', '800'], v
 const tekst = Onest({ subsets: ['latin'], weight: ['400', '500', '700'], variable: '--f-tekst' });
 
 export const metadata = {
-  title: 'Socialmediaspiegel · LED-spiegel met jouw naam en logo',
-  description: 'Ontwerp je eigen spiegel in de vorm van een social post. Met jouw accountnaam, logo en LED-licht. Voor salons, barbers en horeca.',
+  title: 'Socialmediaspiegel · spiegel met jouw naam en logo',
+  description: 'Ontwerp je eigen spiegel in de vorm van een social post. Met jouw accountnaam en logo, onverlicht of met LED- en RGB-licht. Voor salons, barbers en horeca.',
 };
 
 export const viewport = { themeColor: '#1b2cff' };

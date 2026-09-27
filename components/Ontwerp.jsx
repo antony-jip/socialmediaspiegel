@@ -109,7 +109,7 @@ export function Ontwerper() {
     <section className="ontwerp" id="ontwerp">
       <div className="ontwerp__tekst">
         <h1>Een spiegel die gepost wil worden.</h1>
-        <p className="ontwerp__lead">Een LED-spiegel in de vorm van een social post, met jouw naam en logo erop. Je klanten maken er een selfie. Jij krijgt de tag.</p>
+        <p className="ontwerp__lead">Een spiegel in de vorm van een social post, met jouw naam en logo erop. Met of zonder licht. Je klanten maken er een selfie. Jij krijgt de tag.</p>
 
         <div className="paneel">
           <div className="veld-rij">
