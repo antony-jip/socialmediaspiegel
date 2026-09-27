@@ -74,7 +74,7 @@ main { min-height: 60vh; }
 
 /* ---------- merk ---------- */
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
-.beeldmerk { width: 34px; height: 34px; flex: none; }
+.beeldmerk { width: 40px; height: 40px; flex: none; }
 .logo__woord { display: inline-flex; align-items: baseline; font: 800 clamp(18px, 2.1vw, 22px)/1 var(--f-merk), sans-serif; letter-spacing: -0.045em; white-space: nowrap; }
 .logo__woord b { font-weight: 800; color: var(--framboos); }
 /* het spiegelvlak: een haarlijn, daarachter de naam in spiegelschrift die wegvaagt */
@@ -115,7 +115,8 @@ main { min-height: 60vh; }
   background: var(--vlak);
   box-shadow: 0 0 0 4px var(--vlak), 0 0 0 7px var(--framboos);
 }
-.profiel__ring .beeldmerk { width: 62%; height: 62%; }
+.profiel__ring .beeldmerk { width: 64%; height: 64%; }
+.profiel__ring, .kijker__avatar, .venster__avatar, .story__avatar { --merk-rand: #fff; }
 .profiel__avatar:hover .profiel__ring { box-shadow: 0 0 0 4px var(--vlak), 0 0 0 7px var(--framboos-diep); }
 .profiel__naamrij { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .profiel__naamrij h1 { font: 800 clamp(1.6rem, 3vw, 2.2rem)/1.1 var(--f-merk), sans-serif; letter-spacing: -0.045em; }
@@ -488,6 +489,8 @@ main { min-height: 60vh; }
 .voet__regel nav { display: flex; flex-wrap: wrap; gap: 6px 20px; }
 .voet__regel a { color: #fff; text-decoration: none; }
 .voet__regel a:hover { text-decoration: underline; }
+.voet { --merk-rand: var(--inkt); }
+.voet .beeldmerk circle:nth-of-type(2) { fill: var(--framboos); }
 .voet .logo__woord b, .voet .logo__echo { color: #f6a7c8; }
 .voet .logo__woord b::after { background: #f6a7c8; }
 
