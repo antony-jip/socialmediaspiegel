@@ -3,7 +3,7 @@ import { Aanvraag, Muur, Ontwerper, OntwerpProvider } from '@/components/Ontwerp
 const VOORBEELDEN = [
   { foto: '/foto/kapper.jpg', kleur: 'var(--geel)', tag: 'Kapper', cfg: { naam: 'knipstudio.zwolle', ondertitel: 'Hair · Color · Care', likes: 4820, reacties: 132, vorm: 'post', formaat: 'm', led: 'warm', kader: 'donker' } },
   { foto: '/foto/nagels.jpg', kleur: 'var(--roze)', tag: 'Nagelstudio', cfg: { naam: 'nailsbyfleur', ondertitel: 'Gel · Biab · Art', likes: 23400, reacties: 861, vorm: 'telefoon', formaat: 'm', led: 'koel', kader: 'licht' } },
-  { foto: '/foto/horeca.jpg', kleur: 'var(--groen)', tag: 'Horeca', cfg: { naam: 'koffiebar.dewerf', ondertitel: 'Koffie · Brunch · Borrel', likes: 1290, reacties: 48, vorm: 'post', formaat: 'm', led: 'uit', kader: 'licht' } },
+  { foto: '/foto/horeca.jpg', kleur: 'var(--groen)', tag: 'Horeca', cfg: { naam: 'koffiebar.dewerf', ondertitel: 'Koffie · Brunch · Borrel', likes: 1290, reacties: 48, vorm: 'post', formaat: 'm', led: 'rgb', kader: 'licht' } },
 ];
 
 const STAPPEN = [
@@ -15,6 +15,7 @@ const STAPPEN = [
 const VRAGEN = [
   ['Staat er een app-logo op?', 'Nee. Hij lijkt op een post, maar zonder logo’s van apps. Alleen jouw naam en jouw logo.'],
   ['Kan het ook op maat?', 'Ja. Zet je maat in de opmerking bij je aanvraag, dan krijg je een prijs bij je proef.'],
+  ['Moet hij verlicht zijn?', 'Nee, standaard is hij onverlicht. Kies je licht, dan krijg je warm wit, koel wit of RGB. Bij RGB kies je zelf de kleur met een afstandsbediening.'],
   ['Hoe hang ik hem op?', 'Hij komt met een ophangset. Met licht zit er een stekker aan, dus je hebt alleen een stopcontact nodig.'],
   ['Waar wordt hij gemaakt?', 'In onze eigen werkplaats bij Sign Company. Glas, print en licht onder één dak.'],
 ];

@@ -172,7 +172,7 @@ def blad1():
     o.append(maat_h(ox2, ox2 + FX * s, oy2 + H * s + 5, "60", oy2 + (FY + FH) * s))
     o.append(maat_h(ox2 + FX * s, ox2 + (FX + FW) * s, oy2 + H * s + 10, "480 buitenmaat koker", oy2 + (FY + FH) * s))
     o.append(maat_v(oy2 + FY * s, oy2 + (FY + FH) * s, ox2 + W * s + 5, "1080", ox2 + (FX + FW) * s))
-    o.append(tekst(ox2, oy2 + H * s + 16, "oranje = LED-strip op buitenzijde koker", "klein"))
+    o.append(tekst(ox2, oy2 + H * s + 16, "oranje = optionele LED-strip rondom op buitenzijde koker", "klein"))
     o.append(tekst(ox2, oy2 + H * s + 19.5, "stip onder = kabeluitgang, gaten boven = sleutelgaten", "klein"))
 
     # doorsnede detail 1:1 (horizontaal, linkerrand; voorkant boven, muur onder)
@@ -190,8 +190,8 @@ def blad1():
     o.append(f'<rect x="{dx}" y="{y_onder}" width="{lengte * d}" height="{3 * d}" class="plaat"/>')
     o.append(f'<rect x="{dx + KI * d}" y="{y_kok}" width="{KB * d}" height="{KD * d}" class="koker"/>')
     o.append(f'<rect x="{dx + (KI + 2) * d}" y="{y_kok + 2 * d}" width="{(KB - 4) * d}" height="{(KD - 4) * d}" fill="#fff" stroke="#111" stroke-width=".15"/>')
-    o.append(f'<rect x="{dx + (KI - 9) * d}" y="{y_kok + 12 * d}" width="{9 * d}" height="{16 * d}" fill="#fff4d6" stroke="#111" stroke-width=".2"/>')
-    o.append(f'<path d="M{dx + (KI - 9) * d} {y_kok + 16 * d} L{dx - 14} {y_muur - .3} L{dx + 30} {y_muur - .3} L{dx + (KI - 9) * d} {y_kok + 24 * d}z" fill="#f5a300" fill-opacity=".16"/>')
+    o.append(f'<rect x="{dx + (KI - 2) * d}" y="{y_kok + 15 * d}" width="{2 * d}" height="{10 * d}" fill="#f5a300" stroke="#111" stroke-width=".2"/>')
+    o.append(f'<path d="M{dx + (KI - 2) * d} {y_kok + 16 * d} L{dx - 14} {y_muur - .3} L{dx + 34} {y_muur - .3} L{dx + (KI - 2) * d} {y_kok + 24 * d}z" fill="#f5a300" fill-opacity=".16"/>')
     o.append(f'<rect x="{dx - 20}" y="{y_muur}" width="{lengte * d + 20}" height="6" class="muur"/>')
     o.append(tekst(dx - 20, y_muur + 10, "muur", "klein"))
     o.append(maat_h(dx, dx + MX * d, y_glas - 5, "30", y_glas))
@@ -203,7 +203,7 @@ def blad1():
         (dx + 12, y_voor + .2, "folie + laminaat op bovenplaat Dibond 4 mm, VHB 1 mm"),
         (dx + 100, y_onder + 1.5, "onderplaat Dibond 3 mm"),
         (dx + (KI + KB) * d - 1, y_kok + 8, "alu koker 40 × 20 × 2, verlijmd"),
-        (dx + (KI - 5) * d, y_kok + 20, "LED COB 24 V in alu profiel + opaal diffuser"),
+        (dx + (KI - 1) * d, y_kok + 20, "optie: LED COB 24 V direct op koker"),
     ]
     for i, (tx, ty, t) in enumerate(lab):
         ly = dy - 10 + i * 7 if i < 3 else y_kok + 10 + (i - 3) * 12
@@ -221,8 +221,8 @@ def blad1():
         ("3", "1", "Bedrukte cast-folie + laminaat op bovenplaat, vóór frezen (of UV-print)"),
         ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, rechte hoeken, randen geslepen"),
         ("5", "1", f"Ring alu koker 40 × 20 × 2, buitenmaat 480 × 1080 ({nl(omtrek_koker, 2)} m)"),
-        ("6", f"{nl(omtrek_koker, 1)} m", "LED COB 24 V ± 10 W/m, 2700 K / 6000 K of CCT, in opbouwprofiel"),
-        ("7", "1", f"Voeding 24 V 48–60 W stekkeradapter CE + inline schakelaar (LED ± {led_w:.0f} W)"),
+        ("6", f"{nl(omtrek_koker, 1)} m", "Optie: LED COB 24 V ± 10 W/m direct op koker; warm, koel of RGB"),
+        ("7", "1", f"Optie: voeding 24 V 48–60 W CE + schakelaar, bij RGB controller + afstandsbediening"),
         ("8", "2", "Sleutelgatplaatje staal, in bovenregel koker, h.o.h. 300"),
         ("9", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
         ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, koker op onderplaat"),
@@ -234,7 +234,7 @@ def blad1():
         o.append(tekst(sx + 7, yy, aantal, "t"))
         o.append(tekst(sx + 20, yy, oms, "t"))
         o.append(f'<line x1="{sx}" y1="{yy + 1.8}" x2="{sx + 196}" y2="{yy + 1.8}" class="dun"/>')
-    o.append(tekst(sx, sy + 70, f"Gewicht ± {nl(gewicht, 1)} kg · stroom ± {led_w:.0f} W · uitsteek van muur 49 mm", "t"))
+    o.append(tekst(sx, sy + 70, f"Standaard onverlicht. Gewicht ± {nl(gewicht, 1)} kg · met licht ± {led_w:.0f} W · uitsteek van muur 49 mm", "t"))
 
     o.append(titelblok("1 van 2", "aanzichten, doorsnede, stuklijst"))
     return blad("".join(o))
@@ -289,8 +289,8 @@ def blad2():
         ["Spiegel in het venster: VHB-stroken + verticale rupsen", "spiegelkit, niet vol-vlaks. Voorvlak gelijk met folie."],
         ["Omdraaien, mal C tegen de nokken, koker verlijmen."],
         ["24 uur laten uitharden voor transport."],
-        ["LED-profiel op buitenzijde koker, kabel naar onder-", "midden, sleutelgatplaatjes in bovenregel."],
-        ["Lichttest in donkere ruimte op 40 mm van een witte", "wand: gloed gelijkmatig, geen losse punten."],
+        ["Sleutelgatplaatjes in bovenregel. Bij licht: COB-strip rondom", "op buitenzijde koker, hoeken knippen + doorverbinden."],
+        ["Bij licht: test in donkere ruimte op 40 mm van een witte", "wand: gloed gelijkmatig, hoeken zonder gat in de gloed."],
         ["Verpakken met hoekbeschermers + boormal B erbij."],
     ]
     rij = 0
@@ -305,7 +305,7 @@ def blad2():
     o.append(tekst(wx, ny, "Nog te beslissen", "kop"))
     open_ = [
         "Koker gelast (ring) of met hoekverbinders.",
-        "Lichtkleur vast of CCT-strip met afstandsbediening.",
+        "Hoekverbinding strip: connector of solderen.",
         "Leverancier glas + folie: kit laten vrijgeven.",
         "Folie om de buitenrand vouwen of Dibond-kern zichtbaar.",
         "Proefstuk: lichtbeeld op 40 mm, zo nodig 50 mm koker.",
