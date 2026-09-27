@@ -25,7 +25,7 @@ export default function Zakelijk() {
             <li>Voor bruiloften, openingen, beurzen en feesten</li>
             <li>Met jouw naam of hashtag in het kader</li>
             <li>Met Glow-licht, ook ’s avonds een blikvanger</li>
-            <li>We bespreken samen levering en plaatsing</li>
+            <li>Ophalen en terugbrengen in Enkhuizen</li>
           </ul>
         </article>
       </section>

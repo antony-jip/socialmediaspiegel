@@ -49,6 +49,9 @@ export default function ZakelijkFormulier() {
         <label className="veld veld--breed"><span>Hoeveel spiegels, en voor hoeveel vestigingen?</span><input name="aantal" placeholder="Bijvoorbeeld 12 spiegels voor 6 vestigingen" /></label>
       ) : (
         <>
+          <p className="melding veld--breed">
+            <b>Ophalen en terugbrengen in Enkhuizen.</b> Je haalt de spiegel zelf bij ons op en brengt hem na je evenement weer terug. Vervoer regel je zelf; neem een auto mee waar een spiegel van 60 × 120 cm plat in past.
+          </p>
           <label className="veld"><span>Datum</span><input name="datum" type="date" /></label>
           <label className="veld"><span>Plaats</span><input name="plaats" placeholder="Waar is het evenement?" /></label>
         </>
