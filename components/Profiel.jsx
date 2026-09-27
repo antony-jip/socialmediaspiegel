@@ -115,20 +115,36 @@ function StoryKijker({ story, onSluit }) {
 function maakPosts(cfg) {
   const nodig = klantenNodig(prijsVan(cfg), PER_KLANT);
   const v = VOORBEELDEN;
+  const impressie = 'Impressiebeeld. Echte foto’s volgen zodra de eerste spiegels hangen.';
   return [
-    { soort: 'foto', v: v[0] },
-    { soort: 'tekst', kleur: 'blush', kop: 'Word gepost.', tekst: 'Wie voor jouw spiegel een selfie maakt, zet jouw naam in zijn story. Zonder dat je erom vraagt.', actie: ['link', '/ontwerpen', 'Ontwerp de jouwe'] },
-    { soort: 'foto', v: v[1] },
+    { soort: 'beeld', groot: true, src: '/beeld/selfie.jpg', alt: 'Vrouw maakt een selfie voor een spiegel in telefoonvorm in een roze salon', kop: 'Word gepost.', tekst: 'Zo werkt het: je klant ziet zichzelf in een spiegel die op een post lijkt, pakt haar telefoon en deelt het. Met jouw naam erbij.', noot: impressie, actie: ['link', '/ontwerpen', 'Ontwerp de jouwe'] },
+    { soort: 'tekst', kleur: 'blush', kop: 'Elke selfie is reclame.', tekst: 'Wie voor jouw spiegel een selfie maakt, zet jouw naam in zijn story. Zonder dat je erom vraagt.', actie: ['link', '/ontwerpen', 'Ontwerp de jouwe'] },
     { soort: 'tekst', kleur: 'mint', kop: 'Echt glas.', tekst: 'Spiegelglas van 4 mm met veiligheidsfolie. Scherp, krasvast en makkelijk schoon.', actie: ['story', 'maken', 'Zo maken we hem'] },
-    { soort: 'foto', v: v[2] },
+    { soort: 'beeld', src: '/beeld/barber.jpg', alt: 'Man maakt een selfie voor een zwarte spiegel in postvorm in een barbershop', kop: 'Barber', tekst: 'Postvorm met zwart kader en warm licht. Past bij hout, leer en groen.', noot: impressie, actie: ['link', '/ontwerpen', 'Maak zo’n spiegel'] },
     { soort: 'tekst', kleur: 'perzik', kop: `Terug na ${nodig} klanten.`, tekst: `Levert een nieuwe klant je ${euro(PER_KLANT)} op? Dan heb je hem na ${nodig} nieuwe klanten terugverdiend.`, actie: ['story', 'terug', 'Reken mee'] },
-    { soort: 'foto', v: v[3] },
+    { soort: 'beeld', src: '/beeld/wimpers.jpg', alt: 'Vrouw bekijkt haar wimpers in een lila spiegel in telefoonvorm met koel licht', kop: 'Wimperstudio', tekst: 'Telefoonvorm met lila kader en koel wit licht. Je klant ziet het resultaat meteen, en deelt het.', noot: impressie, actie: ['link', '/ontwerpen', 'Maak zo’n spiegel'] },
+    { soort: 'foto', v: v[0] },
     { soort: 'kleuren', kleur: 'lila', kop: 'Jouw huiskleur.', tekst: 'Het kader is bedrukte folie, dus elke kleur kan. Kies uit onze kleuren of geef je eigen kleur op.', actie: ['link', '/ontwerpen', 'Kies je kleur'] },
-    { soort: 'foto', v: v[4] },
+    { soort: 'beeld', src: '/beeld/detail.jpg', alt: 'Detail van de spiegelrand: glas vlak in het witte kader met LED-gloed op de muur', kop: 'Vlak glas, zachte gloed', tekst: 'Het glas ligt precies gelijk met het kader. Kies je licht, dan valt er een zachte gloed rondom op je muur.', noot: impressie, actie: ['story', 'maken', 'Zo maken we hem'] },
+    { soort: 'beeld', src: '/beeld/cafe.jpg', alt: 'Twee vriendinnen maken een selfie voor een gele spiegel in postvorm in een koffiebar', kop: 'Koffiebar', tekst: 'Postvorm met boterkleurig kader. Gasten maken er vanzelf een foto, en jouw zaak reist mee.', noot: impressie, actie: ['link', '/ontwerpen', 'Maak zo’n spiegel'] },
+    { soort: 'foto', v: v[1] },
+    { soort: 'foto', v: v[2] },
   ];
 }
 
-function Tegel({ post, cfgNodig }) {
+function Tegel({ post }) {
+  if (post.soort === 'beeld') {
+    return (
+      <>
+        <img className="tegel__beeld" src={post.src} alt="" loading={post.groot ? 'eager' : 'lazy'} />
+        {post.groot && (
+          <span className="tegel__vast" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M9 3h6l-1 6 4 3v2h-5v7l-1 1-1-1v-7H6v-2l4-3z" fill="currentColor" /></svg>
+          </span>
+        )}
+      </>
+    );
+  }
   if (post.soort === 'foto') {
     return (
       <>
@@ -160,12 +176,15 @@ function PostVenster({ post, onSluit, onStory }) {
 
   const gebruik = () => { setCfg((c) => ({ ...c, ...post.v.cfg })); router.push('/ontwerpen'); };
   const foto = post.soort === 'foto';
+  const beeld = post.soort === 'beeld';
 
   return (
     <div className="venster" role="dialog" aria-modal="true" onClick={onSluit}>
       <article className="venster__post" onClick={(e) => e.stopPropagation()}>
         <div className="venster__beeld">
-          {foto ? <Muur foto={post.v.foto} kleur={post.v.kleur} cfg={post.v.cfg} interactief /> : <span className={`venster__vlak story-${post.kleur}`}><b>{post.kop}</b></span>}
+          {foto && <Muur foto={post.v.foto} kleur={post.v.kleur} cfg={post.v.cfg} interactief />}
+          {beeld && <img className="venster__foto" src={post.src} alt={post.alt} />}
+          {!foto && !beeld && <span className={`venster__vlak story-${post.kleur}`}><b>{post.kop}</b></span>}
         </div>
         <div className="venster__zij">
           <header className="venster__kop">
@@ -187,7 +206,10 @@ function PostVenster({ post, onSluit, onStory }) {
               <p className="venster__klein">Voorbeeldontwerp. Naam en logo worden de jouwe.</p>
             </div>
           ) : (
-            <div className="venster__tekst"><p><b>socialmediaspiegel</b> {post.tekst}</p></div>
+            <div className="venster__tekst">
+              <p><b>socialmediaspiegel</b> {post.tekst}</p>
+              {post.noot && <p className="venster__klein">{post.noot}</p>}
+            </div>
           )}
           <footer className="venster__voet">
             {foto && <button type="button" className="knop knop--framboos" onClick={gebruik}>Gebruik dit ontwerp</button>}
@@ -270,7 +292,7 @@ export default function Profiel() {
         </div>
         <div className="feed__grid">
           {posts.map((p, i) => (
-            <button key={i} type="button" className="tegel" onClick={() => setPost(p)} aria-label={p.soort === 'foto' ? `Voorbeeld ${p.v.tag}` : p.kop}>
+            <button key={i} type="button" className={`tegel${p.groot ? ' tegel--groot' : ''}`} onClick={() => setPost(p)} aria-label={p.soort === 'foto' ? `Voorbeeld ${p.v.tag}` : p.alt || p.kop}>
               <Tegel post={p} />
             </button>
           ))}

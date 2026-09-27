@@ -151,6 +151,11 @@ main { min-height: 60vh; }
 .tegel { position: relative; aspect-ratio: 4 / 5; padding: 0; border: 0; overflow: hidden; cursor: pointer; background: var(--lila); }
 .tegel:hover::after { content: ''; position: absolute; inset: 0; background: rgba(35, 27, 51, 0.08); }
 .tegel .tegel__muur { position: absolute; inset: 0; aspect-ratio: auto; border-radius: 0; }
+.tegel--groot { grid-column: span 2; grid-row: span 2; aspect-ratio: auto; }
+.tegel__beeld { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tegel__vast { position: absolute; top: 10px; right: 10px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); color: var(--inkt); }
+.tegel__vast svg { width: 15px; height: 15px; }
+.venster__foto { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
 .tegel__label {
   position: absolute; left: 10px; bottom: 10px; padding: 4px 9px; border-radius: 8px;
   background: rgba(255, 255, 255, 0.88); font-size: 12px; font-weight: 700; color: var(--inkt);
@@ -259,11 +264,17 @@ main { min-height: 60vh; }
   position: relative; flex: 1; overflow: hidden; touch-action: manipulation; user-select: none;
   background: linear-gradient(160deg, #dde2e9 0%, #f7f8fa 28%, #c6ccd4 55%, #eef0f3 76%, #bac2cb 100%);
 }
+.spiegel__glas::before {
+  content: ''; position: absolute; inset: -8%;
+  background: var(--reflectie, none) center 35% / cover no-repeat;
+  transform: scaleX(-1); filter: blur(5px) saturate(0.85) brightness(1.08); opacity: 0.6;
+}
+.spiegel__glas::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0) 40%, rgba(35, 27, 51, 0.08)); }
 .spiegel__glans {
-  position: absolute; inset: 0; pointer-events: none;
+  position: absolute; inset: 0; pointer-events: none; z-index: 1; opacity: 0.7;
   background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.75) 37%, transparent 43%, transparent 57%, rgba(255, 255, 255, 0.45) 61%, transparent 65%);
 }
-.spiegel__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+.spiegel__video { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 .spiegel__acties { display: flex; align-items: center; gap: 2cqw; }
 .spiegel__acties svg { width: 7cqw; height: 7cqw; flex: none; }
 .spiegel__getal { font-weight: 700; font-size: 3.8cqw; margin-right: 2cqw; }
@@ -272,7 +283,7 @@ main { min-height: 60vh; }
 .spiegel__hart { display: flex; animation: pop 0.35s ease; }
 @keyframes pop { 40% { transform: scale(1.35); } }
 .spiegel__groothart {
-  position: absolute; inset: 0; display: grid; place-items: center; color: #fff; pointer-events: none;
+  position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; color: #fff; pointer-events: none;
   animation: groot 0.95s ease forwards; filter: drop-shadow(0 1cqw 3cqw rgba(0, 0, 0, 0.25));
 }
 .spiegel__groothart svg { width: 42cqw; height: 42cqw; }
