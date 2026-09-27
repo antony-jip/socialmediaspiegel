@@ -12,8 +12,9 @@ UIT.mkdir(exist_ok=True)
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
 # ---- maatvoering (afgeleid van de spiegel op de site: 1 cqw = 6 mm) ----
-W, H, R = 600, 1200, 72                     # frontplaat Dibond
+W, H, R = 600, 1200, 72                     # onder- en bovenplaat Dibond
 MX, MY, MW, MH, MR = 30, 180, 540, 860, 15  # spiegelglas
+VENSTER = (MX - .5, MY - .5, MW + 1, MH + 1, MR + .5)  # uitsparing bovenplaat, 0,5 mm speling rondom
 KI, KB, KD = 60, 20, 40                     # koker: inspringen, breedte, diepte
 FX, FY, FW, FH = KI, KI, W - 2 * KI, H - 2 * KI
 SLEUTEL = [(150, 70), (450, 70)]            # sleutelgatplaatjes, h.o.h. 300
@@ -24,12 +25,14 @@ PRINT = [  # printzones voorkant: (label, y1, y2)
     ("likes / reacties", 1061, 1103),
     ("tabbalk", 1124, 1169),
 ]
-DIBOND_KG_M2, GLAS_KG_M2, KOKER_KG_M = 3.8, 10.0, 0.62
+DIBOND3_KG_M2, DIBOND4_KG_M2, GLAS_KG_M2, KOKER_KG_M = 3.8, 4.8, 10.0, 0.62
 LED_W_M = 10
 
 omtrek_koker = 2 * (FW + FH) / 1000
+plaat_m2 = (W * H - (4 - math.pi) * R * R) / 1e6
 gewicht = (
-    (W * H - (4 - math.pi) * R * R) / 1e6 * DIBOND_KG_M2
+    plaat_m2 * DIBOND3_KG_M2
+    + (plaat_m2 - VENSTER[2] * VENSTER[3] / 1e6) * DIBOND4_KG_M2
     + MW * MH / 1e6 * GLAS_KG_M2
     + omtrek_koker * KOKER_KG_M
     + 0.6  # led, profiel, plaatjes, lijm
@@ -149,7 +152,7 @@ def blad1():
     o.append(maat_v(oy, oy + MY * s, ox + W * s + 10, "180", ox + W * s))
     o.append(maat_v(oy + (MY + MH) * s, oy + H * s, ox + W * s + 10, "160", ox + W * s))
     o.append(tekst(ox, oy + H * s + 12, "R72 buitenhoeken · R15 spiegel", "klein"))
-    o.append(tekst(ox, oy + H * s + 15.5, "roze = printzones UV op Dibond", "klein"))
+    o.append(tekst(ox, oy + H * s + 15.5, "wit = bovenplaat 4 mm met folie · roze = opdruk", "klein"))
 
     # achteraanzicht (gespiegeld getekend: links = rechts van voorkant)
     ox2, oy2 = 118, 42
@@ -175,11 +178,15 @@ def blad1():
     d, dx, dy = 1.0, 232, 48
     o.append(titel(dx - 20, dy - 18, "Doorsnede linkerrand", "1:1"))
     lengte = 110
-    y_glas, y_dib = dy, dy + 4 * d
-    y_kok = y_dib + 3 * d + 1 * d  # 1 mm VHB
+    y_voor = dy                      # voorvlak glas = voorvlak bovenplaat
+    y_onder = y_voor + 4 * d + 1 * d  # 4 mm + 1 mm VHB
+    y_kok = y_onder + 3 * d + 1 * d
     y_muur = y_kok + KD * d
-    o.append(f'<rect x="{dx + MX * d}" y="{y_glas}" width="{(lengte - MX) * d}" height="{4 * d}" class="glas"/>')
-    o.append(f'<rect x="{dx}" y="{y_dib}" width="{lengte * d}" height="{3 * d}" class="plaat"/>')
+    y_glas, y_dib = y_voor, y_onder
+    o.append(f'<rect x="{dx + MX * d}" y="{y_voor}" width="{(lengte - MX) * d}" height="{4 * d}" class="glas"/>')
+    o.append(f'<rect x="{dx}" y="{y_voor}" width="{(MX - .5) * d}" height="{4 * d}" class="plaat"/>')
+    o.append(f'<line x1="{dx}" y1="{y_voor - .15}" x2="{dx + (MX - .5) * d}" y2="{y_voor - .15}" stroke="#ff2d87" stroke-width=".5"/>')
+    o.append(f'<rect x="{dx}" y="{y_onder}" width="{lengte * d}" height="{3 * d}" class="plaat"/>')
     o.append(f'<rect x="{dx + KI * d}" y="{y_kok}" width="{KB * d}" height="{KD * d}" class="koker"/>')
     o.append(f'<rect x="{dx + (KI + 2) * d}" y="{y_kok + 2 * d}" width="{(KB - 4) * d}" height="{(KD - 4) * d}" fill="#fff" stroke="#111" stroke-width=".15"/>')
     o.append(f'<rect x="{dx + (KI - 9) * d}" y="{y_kok + 12 * d}" width="{9 * d}" height="{16 * d}" fill="#fff4d6" stroke="#111" stroke-width=".2"/>')
@@ -188,42 +195,45 @@ def blad1():
     o.append(tekst(dx - 20, y_muur + 10, "muur", "klein"))
     o.append(maat_h(dx, dx + MX * d, y_glas - 5, "30", y_glas))
     o.append(maat_h(dx, dx + KI * d, y_muur + 16, "60", y_muur + 6))
-    o.append(maat_v(y_glas, y_muur, dx - 26, "48 totaal", dx - 20))
+    o.append(maat_v(y_voor, y_muur, dx - 26, "49 totaal", dx - 20))
     o.append(maat_v(y_kok, y_muur, dx + (KI + KB) * d + 5, "40", dx + (KI + KB) * d))
     lab = [  # (doel x, doel y, label)
-        (dx + 100, y_glas + 2, "spiegel 4 mm + veiligheidsfolie, spiegelkit + VHB 1 mm"),
-        (dx + 100, y_dib + 1.5, "Dibond 3 mm, UV-print voorzijde"),
+        (dx + 100, y_voor + 2, "spiegel 4 mm + veiligheidsfolie, spiegelkit + VHB 1 mm"),
+        (dx + 12, y_voor + .2, "folie + laminaat op bovenplaat Dibond 4 mm, VHB 1 mm"),
+        (dx + 100, y_onder + 1.5, "onderplaat Dibond 3 mm"),
         (dx + (KI + KB) * d - 1, y_kok + 8, "alu koker 40 × 20 × 2, verlijmd"),
         (dx + (KI - 5) * d, y_kok + 20, "LED COB 24 V in alu profiel + opaal diffuser"),
     ]
     for i, (tx, ty, t) in enumerate(lab):
-        ly = dy - 6 + i * 9 if i < 2 else y_kok + 10 + (i - 2) * 12
+        ly = dy - 10 + i * 7 if i < 3 else y_kok + 10 + (i - 3) * 12
         lx = dx + lengte + 8
         o.append(f'<polyline points="{tx},{ty} {lx - 3},{ly} {lx - 1},{ly}" fill="none" class="hulp"/>')
         o.append(f'<circle cx="{tx}" cy="{ty}" r=".5" fill="#111"/>')
         o.append(tekst(lx, ly + 1, t, "klein"))
 
     # stuklijst
-    sx, sy = 212, 142
+    sx, sy = 212, 136
     o.append(tekst(sx, sy, "Stuklijst (per spiegel)", "kop"))
     regels = [
-        ("1", "1", "Frontplaat Dibond 3 mm wit of zwart, 600 × 1200, R72, UV-print"),
-        ("2", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, R15, gepolijst"),
-        ("3", "1", f"Ring alu koker 40 × 20 × 2, buitenmaat 480 × 1080 ({nl(omtrek_koker, 2)} m)"),
-        ("4", f"{nl(omtrek_koker, 1)} m", "LED COB 24 V ± 10 W/m, 2700 K / 6000 K of CCT, in opbouwprofiel"),
-        ("5", "1", f"Voeding 24 V 48–60 W stekkeradapter CE + inline schakelaar (LED ± {led_w:.0f} W)"),
-        ("6", "2", "Sleutelgatplaatje staal, in bovenregel koker, h.o.h. 300"),
-        ("7", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
-        ("8", "1", "Constructietape/MS-polymeer voor koker op Dibond"),
-        ("9", "1", "Boormal B (papier 1:1) + 2× schroef 5 mm en plug"),
+        ("1", "1", "Onderplaat Dibond 3 mm, 600 × 1200, R72"),
+        ("2", "1", "Bovenplaat Dibond 4 mm, 600 × 1200, R72, venster 541 × 861 R15,5"),
+        ("3", "1", "Bedrukte cast-folie + laminaat op bovenplaat, vóór frezen (of UV-print)"),
+        ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, R15, gepolijst"),
+        ("5", "1", f"Ring alu koker 40 × 20 × 2, buitenmaat 480 × 1080 ({nl(omtrek_koker, 2)} m)"),
+        ("6", f"{nl(omtrek_koker, 1)} m", "LED COB 24 V ± 10 W/m, 2700 K / 6000 K of CCT, in opbouwprofiel"),
+        ("7", "1", f"Voeding 24 V 48–60 W stekkeradapter CE + inline schakelaar (LED ± {led_w:.0f} W)"),
+        ("8", "2", "Sleutelgatplaatje staal, in bovenregel koker, h.o.h. 300"),
+        ("9", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
+        ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, koker op onderplaat"),
+        ("11", "1", "Boormal B (papier 1:1) + 2× schroef 5 mm en plug"),
     ]
     for i, (nr, aantal, oms) in enumerate(regels):
         yy = sy + 7 + i * 5.4
         o.append(tekst(sx, yy, nr, "t"))
-        o.append(tekst(sx + 6, yy, aantal, "t"))
+        o.append(tekst(sx + 7, yy, aantal, "t"))
         o.append(tekst(sx + 20, yy, oms, "t"))
         o.append(f'<line x1="{sx}" y1="{yy + 1.8}" x2="{sx + 196}" y2="{yy + 1.8}" class="dun"/>')
-    o.append(tekst(sx, sy + 60, f"Gewicht ± {nl(gewicht, 1)} kg · stroom ± {led_w:.0f} W · uitsteek van muur 48 mm", "t"))
+    o.append(tekst(sx, sy + 70, f"Gewicht ± {nl(gewicht, 1)} kg · stroom ± {led_w:.0f} W · uitsteek van muur 49 mm", "t"))
 
     o.append(titelblok("1 van 2", "aanzichten, doorsnede, stuklijst"))
     return blad("".join(o))
@@ -236,14 +246,14 @@ def blad2():
 
     # mal A: plaatsingsmal spiegel
     ax, ay = 30, 42
-    o.append(titel(ax, ay - 12, "Mal A · spiegel plaatsen", "1:10"))
-    o.append(f'<path d="{rrect_pad(0, 0, W, H, R, s, ax, ay)} {rrect_pad(MX - .5, MY - .5, MW + 1, MH + 1, MR + .5, s, ax, ay)}" '
+    o.append(titel(ax, ay - 12, "Bovenplaat · is de mal", "1:10"))
+    o.append(f'<path d="{rrect_pad(0, 0, W, H, R, s, ax, ay)} {rrect_pad(*VENSTER, s, ax, ay)}" '
              f'fill="#ffe14d" fill-opacity=".5" stroke="#111" stroke-width=".3" fill-rule="evenodd"/>')
     for (x, y) in [(-12, 300), (-12, 900), (150, -12), (450, -12)]:
         o.append(f'<rect x="{ax + x * s}" y="{ay + y * s - (1 if x < 0 else 0)}" width="{1.2 if x < 0 else 2}" height="{2 if x < 0 else 1.2}" fill="#111"/>')
     o.append(maat_h(ax + MX * s, ax + (MX + MW) * s, ay + H * s + 5, "541 venster", ay + (MY + MH) * s))
     o.append(maat_v(ay + MY * s, ay + (MY + MH) * s, ax + W * s + 5, "861", ax + (MX + MW) * s))
-    o.append(tekst(ax, ay + H * s + 12, "3 mm Forex, zelfde buitencontour, venster spiegel +1 mm", "klein"))
+    o.append(tekst(ax, ay + H * s + 12, "4 mm Dibond met folie, venster = spiegel + 1 mm", "klein"))
     o.append(tekst(ax, ay + H * s + 15.5, "zwart = aanslagnokken op werktafel (links + boven)", "klein"))
 
     # mal C: koker plaatsen
@@ -272,10 +282,11 @@ def blad2():
     wx, wy = 290, 42
     o.append(tekst(wx, wy - 12, "Werkvolgorde", "kop"))
     stappen = [
-        ["Dibond frezen (contour R72) uit het 1:1-bestand."],
-        ["UV-print voorzijde, spiegelvlak vrij laten;", "hoekmerken binnen het spiegelvlak (vallen onder glas)."],
-        ["Mal A op de plaat tegen de nokken, spiegel in venster,", "VHB-stroken + verticale rupsen spiegelkit, niet vol-vlaks."],
-        ["Plaat omdraaien, mal C tegen de nokken, koker verlijmen."],
+        ["Folie printen, lamineren en op de 4 mm plaat zetten."],
+        ["Frezen: onderplaat contour, bovenplaat contour + venster", "door de folie heen (bestanden onder/boven)."],
+        ["Onderplaat tegen de nokken, bovenplaat erop met VHB,", "randen gelijk tegen dezelfde nokken."],
+        ["Spiegel in het venster: VHB-stroken + verticale rupsen", "spiegelkit, niet vol-vlaks. Voorvlak gelijk met folie."],
+        ["Omdraaien, mal C tegen de nokken, koker verlijmen."],
         ["24 uur laten uitharden voor transport."],
         ["LED-profiel op buitenzijde koker, kabel naar onder-", "midden, sleutelgatplaatjes in bovenregel."],
         ["Lichttest in donkere ruimte op 40 mm van een witte", "wand: gloed gelijkmatig, geen losse punten."],
@@ -295,6 +306,7 @@ def blad2():
         "Koker gelast (ring) of met hoekverbinders.",
         "Lichtkleur vast of CCT-strip met afstandsbediening.",
         "Leverancier glas + folie: kit laten vrijgeven.",
+        "Folie om de buitenrand vouwen of Dibond-kern zichtbaar.",
         "Proefstuk: lichtbeeld op 40 mm, zo nodig 50 mm koker.",
     ]
     for i, t in enumerate(open_):
@@ -381,12 +393,12 @@ def main():
                    check=True, capture_output=True)
 
     buiten = (0, 0, W, H, R)
-    dxf("frees-dibond-front.dxf", {"FREES_BUITEN": [buiten]})
-    dxf("frees-mal-A-spiegel.dxf", {"FREES_BUITEN": [buiten], "FREES_BINNEN": [(MX - .5, MY - .5, MW + 1, MH + 1, MR + .5)]})
+    dxf("frees-dibond-onder-3mm.dxf", {"FREES_BUITEN": [buiten]})
+    dxf("frees-dibond-boven-4mm.dxf", {"FREES_BUITEN": [buiten], "FREES_BINNEN": [VENSTER]})
     dxf("frees-mal-C-koker.dxf", {"FREES_BUITEN": [buiten], "FREES_BINNEN": [(FX - .5, FY - .5, FW + 1, FH + 1, 1)]})
     dxf("boormal-B.dxf", {"CONTOUR": [buiten], "GATEN": [("cirkel", x, y, 2.5) for x, y in SLEUTEL]})
-    svg11("frees-dibond-front.svg", [(rrect_pad(*buiten), "#000")])
-    svg11("frees-mal-A-spiegel.svg", [(rrect_pad(*buiten), "#000"), (rrect_pad(MX - .5, MY - .5, MW + 1, MH + 1, MR + .5), "#f00")])
+    svg11("frees-dibond-onder-3mm.svg", [(rrect_pad(*buiten), "#000")])
+    svg11("frees-dibond-boven-4mm.svg", [(rrect_pad(*buiten), "#000"), (rrect_pad(*VENSTER), "#f00")])
     svg11("frees-mal-C-koker.svg", [(rrect_pad(*buiten), "#000"), (rrect_pad(FX - .5, FY - .5, FW + 1, FH + 1, 1), "#f00")])
     print(f"gewicht {gewicht:.1f} kg · led {led_w:.0f} W · koker {omtrek_koker:.2f} m")
 
