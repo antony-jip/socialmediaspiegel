@@ -16,7 +16,7 @@ export function OntwerpProvider({ children }) {
 
 export function Muur({ foto, kleur, cfg, logo, video, interactief, children }) {
   return (
-    <div className={`muur muur--${cfg.vorm}`} style={{ '--muur': kleur, backgroundImage: foto ? `url(${foto})` : undefined }}>
+    <div className={`muur muur--${cfg.vorm} muur--${cfg.formaat}`} style={{ '--muur': kleur, backgroundImage: foto ? `url(${foto})` : undefined }}>
       <div className="muur__hanger">
         <Spiegel cfg={cfg} logo={logo} video={video} interactief={interactief} />
       </div>

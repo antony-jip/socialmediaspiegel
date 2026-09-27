@@ -150,8 +150,12 @@ img { display: block; max-width: 100%; }
   overflow: hidden;
   background: var(--muur) center / cover no-repeat;
 }
-.muur__hanger { width: 40%; transform: translateY(-6%); }
-.muur--post .muur__hanger { width: 58%; }
+.muur__hanger { width: 36%; transform: translateY(-14%); transition: width 0.3s ease; }
+.muur--s .muur__hanger { width: 29%; }
+.muur--l .muur__hanger { width: 43%; }
+.muur--post .muur__hanger { width: 52%; }
+.muur--post.muur--s .muur__hanger { width: 44%; }
+.muur--post.muur--l .muur__hanger { width: 60%; }
 
 .spiegel { container-type: inline-size; position: relative; border-radius: 12% / 6%; transition: box-shadow 0.3s; }
 .spiegel--post { border-radius: 5%; }
