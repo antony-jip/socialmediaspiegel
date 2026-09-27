@@ -389,6 +389,26 @@ main > section > :not(.decor):not(.glans) { position: relative; z-index: 1; }
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
+/* ---------- terugverdienen ---------- */
+.terug {
+  display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center;
+  gap: clamp(40px, 7vw, 110px); padding: 112px var(--rand); background: var(--roze); color: var(--wit);
+}
+.terug h2 { margin: 22px 0 22px; max-width: 11ch; font-size: clamp(2.4rem, 5.4vw, 5rem); }
+.terug__tekst > p { max-width: 42ch; font-size: 1.15rem; }
+.terug__schuif { display: grid; gap: 14px; margin-top: 36px; max-width: 460px; font-weight: 700; }
+.terug__schuif b { font: 800 1.5rem var(--display); color: var(--geel); margin-left: 6px; }
+.terug__schuif input { width: 100%; height: 10px; accent-color: var(--geel); cursor: pointer; }
+.terug__uitkomst {
+  justify-self: stretch; display: grid; justify-items: start; gap: 14px; padding: 36px; border-radius: 28px;
+  background: var(--wit); color: var(--inkt); box-shadow: 0 0 0 3px var(--inkt), 10px 12px 0 var(--inkt); transform: rotate(1.5deg);
+}
+.terug__getal { font: 800 clamp(6rem, 13vw, 11rem)/0.85 var(--display); letter-spacing: -0.06em; color: var(--kobalt); }
+.terug__zin { font: 700 clamp(1.2rem, 2vw, 1.6rem)/1.2 var(--display); letter-spacing: -0.03em; max-width: 18ch; }
+.terug__zin b { color: var(--roze); }
+.terug__dag { font-size: 1.05rem; }
+.totaal__terug { display: inline-block; margin-top: 10px; padding: 5px 10px; border-radius: 8px; background: var(--geel); color: var(--inkt); font-size: 13px; font-weight: 700; }
+
 /* ---------- ontwerp ---------- */
 .ontwerp {
   display: grid;
@@ -505,7 +525,7 @@ main > section > :not(.decor):not(.glans) { position: relative; z-index: 1; }
 .voorbeelden figcaption .knop { flex: none; }
 
 /* ---------- stappen ---------- */
-.stappen { padding: 104px var(--rand); background: var(--roze); color: var(--wit); }
+.stappen { padding: 104px var(--rand); background: var(--kobalt); color: var(--wit); }
 .stappen ol { list-style: none; margin: 48px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; counter-reset: stap; }
 .stappen li { counter-increment: stap; border-top: 3px solid var(--wit); padding-top: 20px; }
 .stappen li::before { content: counter(stap); display: block; font: 800 3.4rem/1 var(--display); color: var(--geel); margin-bottom: 16px; }
@@ -561,6 +581,11 @@ main > section > :not(.decor):not(.glans) { position: relative; z-index: 1; }
 .maken article:nth-child(3) { background: #ffe0ee; }
 .maken article:nth-child(4) { background: #dff7ec; }
 .maken h3 { font-size: 1.25rem; margin-bottom: 10px; letter-spacing: -0.02em; }
+
+.bedankt-pagina { display: grid; justify-items: start; gap: 20px; min-height: 60vh; padding: 96px var(--rand); background: var(--kobalt); color: var(--wit); }
+.bedankt-pagina h1 { max-width: 14ch; font-size: clamp(2.6rem, 6vw, 5.4rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.05em; }
+.bedankt-pagina p { max-width: 44ch; font-size: 1.2rem; }
+.bedankt-pagina__wat { padding: 10px 14px; border-radius: 12px; background: rgba(255, 255, 255, 0.14); font-weight: 700; font-size: 1rem !important; }
 
 /* ---------- vragen ---------- */
 .vragen { padding: 104px var(--rand); max-width: calc(880px + 2 * var(--rand)); }
@@ -619,6 +644,8 @@ main > section > :not(.decor):not(.glans) { position: relative; z-index: 1; }
   .hero__muur { width: 100%; aspect-ratio: auto; height: min(72svh, 125vw); }
   .reclame { grid-template-columns: minmax(0, 1fr); justify-items: center; padding: 80px var(--rand); }
   .verhaal { grid-template-columns: minmax(0, 1fr); justify-items: center; padding: 80px var(--rand); }
+  .terug { grid-template-columns: minmax(0, 1fr); padding: 80px var(--rand); }
+  .terug__uitkomst { transform: none; }
   .verhaal__tekst { justify-self: stretch; }
   .reclame__tekst { justify-self: stretch; }
 

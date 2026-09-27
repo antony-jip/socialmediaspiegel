@@ -46,7 +46,7 @@ export function Slotblok() {
     <section className="slotblok">
       <Decor items={[['ster', 'var(--roze)', 8, 20, 40], ['hart', 'var(--roze)', 90, 24, 34, 12], ['ster', 'var(--kobalt)', 84, 70, 24], ['at', 'var(--kobalt)', 12, 72, 30, -8]]} />
       <h2>Klaar om <span className="storytekst">gepost</span> te worden?</h2>
-      <p>Ontwerp je spiegel in twee minuten. Je krijgt eerst een proef, en je betaalt pas na akkoord.</p>
+      <p>Ontwerp je spiegel in twee minuten. Je krijgt eerst een digitale proef, en we maken hem pas na jouw akkoord.</p>
       <Link className="knop knop--roze knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
     </section>
   );

@@ -1,4 +1,4 @@
-import { Hero, Reclame, Voorbeelden } from '@/components/Ontwerp';
+import { Hero, Reclame, Terugverdienen, Voorbeelden } from '@/components/Ontwerp';
 import { Band, Slotblok, Stappen } from '@/components/Blokken';
 import { VOORBEELDEN } from '@/lib/inhoud';
 
@@ -8,6 +8,7 @@ export default function Home() {
       <Hero />
       <Band />
       <Reclame />
+      <Terugverdienen />
       <Voorbeelden items={VOORBEELDEN.slice(0, 3)} meer />
       <Stappen />
       <Slotblok />

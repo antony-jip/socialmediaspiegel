@@ -39,7 +39,7 @@ export function Zekerheid() {
   return (
     <ul className="zekerheid">
       <li><Vinkje />Eerst een digitale proef</li>
-      <li><Vinkje />Je betaalt pas na akkoord</li>
+      <li><Vinkje />Veilig betalen via Mollie</li>
       <li><Vinkje />Gratis verzending</li>
     </ul>
   );
@@ -229,6 +229,40 @@ export function Reclame() {
   );
 }
 
+/* ---------------------------------------------------------------- terugverdienen */
+// Pure rekensom met de getallen van de bezoeker zelf; geen aannames over bereik of conversie.
+export const klantenNodig = (prijs, perKlant) => Math.max(1, Math.ceil(prijs / Math.max(1, perKlant)));
+const JAREN = 3;
+
+export function Terugverdienen() {
+  const { cfg } = useOntwerp();
+  const [perKlant, setPerKlant] = useState(45);
+  const prijs = prijsVan(cfg);
+  const nodig = klantenNodig(prijs, perKlant);
+  const perDag = prijs / (JAREN * 365);
+
+  return (
+    <section className="terug" id="terugverdienen">
+      <Decor items={[['ster', 'var(--geel)', 90, 10, 40], ['hart', 'var(--roze)', 4, 16, 30, -10], ['rondje', 'var(--geel)', 8, 84, 18], ['ster', '#fff', 60, 88, 20]]} />
+      <div className="terug__tekst">
+        <Sticker soort="tekst" draai={-3}>Reken maar uit</Sticker>
+        <h2>Hij verdient zichzelf <span className="storytekst storytekst--geel">terug.</span></h2>
+        <p>Eén nieuwe klant die je vindt via een selfie voor jouw spiegel, en je bent al een stuk op weg. Reken het uit met je eigen getallen.</p>
+        <label className="terug__schuif">
+          <span>Wat levert een nieuwe klant je gemiddeld op? <b>{euro(perKlant)}</b></span>
+          <input type="range" min="10" max="250" step="5" value={perKlant} onChange={(e) => setPerKlant(Number(e.target.value))} />
+        </label>
+      </div>
+      <div className="terug__uitkomst" aria-live="polite">
+        <span className="terug__getal">{nodig}</span>
+        <p className="terug__zin">nieuwe {nodig === 1 ? 'klant' : 'klanten'} en je spiegel van {euro(prijs)} is <b>terugverdiend.</b></p>
+        <p className="terug__dag">Hangt hij {JAREN} jaar? Dan kost hij je <b>{euro(Math.round(perDag * 100) / 100).replace(/(,\d)$/, '$10')}</b> per dag.</p>
+        <Link className="knop knop--roze knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
+      </div>
+    </section>
+  );
+}
+
 /* ---------------------------------------------------------------- ontwerper */
 function Keuze({ label, waarde, opties, onKies }) {
   return (
@@ -406,6 +440,7 @@ export function Ontwerper() {
           <div>
             <span className="totaal__prijs">{euro(prijsVan(cfg))}</span>
             <span className="totaal__uitleg">{formaatVan(cfg).maat} · {LED[cfg.led].label} · incl. btw</span>
+            <span className="totaal__terug">Terugverdiend na {klantenNodig(prijsVan(cfg), 45)} nieuwe klanten van € 45</span>
           </div>
           <a className="knop knop--roze knop--groot" href="#bestellen">Bestel je spiegel</a>
         </div>
@@ -455,14 +490,15 @@ export function Bestellen() {
     const velden = Object.fromEntries(new FormData(e.currentTarget));
     setStaat({ fase: 'bezig', melding: '' });
     try {
-      const res = await fetch('/api/aanvraag', {
+      const res = await fetch('/api/bestel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cfg, logo, contact: velden }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.fout || 'Bestellen lukte niet. Probeer het opnieuw.');
-      setStaat({ fase: 'klaar', melding: velden.email });
+      try { sessionStorage.setItem('smsp-betaling', data.id); sessionStorage.setItem('smsp-checkout', data.checkout); } catch {}
+      window.location.href = data.checkout;
     } catch (err) {
       setStaat({ fase: 'fout', melding: err.message });
     }
@@ -473,7 +509,7 @@ export function Bestellen() {
       <Decor items={[['ster', 'var(--roze)', 46, 8, 34], ['hart', 'var(--kobalt)', 2, 86, 26, -12], ['ring', 'var(--roze)', 95, 90, 34]]} />
       <div className="bestellen__kop">
         <h2>Bijna klaar.</h2>
-        <p>Laat je gegevens achter. Je krijgt eerst een digitale proef. We maken hem pas, en je betaalt pas, als jij akkoord geeft.</p>
+        <p>Vul je gegevens in en betaal direct via Mollie. Binnen één werkdag krijg je een digitale proef, en we maken hem pas als jij akkoord geeft.</p>
         <div className="bon">
           <div className="bon__mini">
             <Spiegel cfg={cfg} logo={logo} />
@@ -504,7 +540,7 @@ export function Bestellen() {
           <label className="veld veld--breed"><span>Opmerking</span><textarea name="opmerking" rows={3} placeholder="Ander formaat, logo in het kader, levering voor een opening?" /></label>
           {staat.fase === 'fout' && <p className="fout veld--breed" role="alert">{staat.melding}</p>}
           <button className="knop knop--roze knop--groot veld--breed" disabled={staat.fase === 'bezig'}>
-            {staat.fase === 'bezig' ? 'Bestelling versturen...' : `Bestel je spiegel · ${euro(prijsVan(cfg))}`}
+            {staat.fase === 'bezig' ? 'Naar betalen...' : `Bestel en betaal · ${euro(prijsVan(cfg))}`}
           </button>
           <div className="veld--breed"><Zekerheid /></div>
         </form>
