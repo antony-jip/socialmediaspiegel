@@ -1,7 +1,10 @@
 'use client';
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
+import { Decor, Glans } from '@/components/Merk';
 import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
 
 const OntwerpCtx = createContext(null);
@@ -42,23 +45,158 @@ export function Zekerheid() {
   );
 }
 
+/* ---------------------------------------------------------------- stickers */
+const Pin = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.5s-6.5-6.2-6.5-11.3a6.5 6.5 0 0 1 13 0c0 5.1-6.5 11.3-6.5 11.3zm0-8.8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" fill="currentColor" /></svg>
+);
+
+export function Sticker({ soort = 'tekst', draai = -3, children }) {
+  return (
+    <span className={`sticker sticker--${soort}`} style={{ '--draai': `${draai}deg` }}>
+      {soort === 'plek' && <Pin />}
+      {soort === 'noem' && <b>@</b>}
+      {children}
+    </span>
+  );
+}
+
+export function Poll() {
+  const { zet } = useOntwerp();
+  const router = useRouter();
+  const kies = (led) => {
+    if (led) zet('led', led);
+    router.push('/ontwerpen');
+  };
+  return (
+    <div className="poll" role="group" aria-label="Zo'n spiegel in jouw zaak?">
+      <p className="poll__vraag">Zo’n spiegel in jouw zaak?</p>
+      <button type="button" onClick={() => kies(null)}>Ja</button>
+      <button type="button" onClick={() => kies('warm')}>Ja, met licht</button>
+    </div>
+  );
+}
+
+/* ---------------------------------------------------------------- verhaalbalk */
+// Story-segmenten bovenin: één per sectie van de huidige pagina.
+export function Verhaalbalk() {
+  const pad = usePathname();
+  const [vul, setVul] = useState([]);
+  useEffect(() => {
+    const secties = () => [...document.querySelectorAll('main > section')];
+    const meet = () => {
+      const mid = window.innerHeight * 0.35;
+      setVul(secties().map((el) => {
+        const r = el.getBoundingClientRect();
+        return Math.min(1, Math.max(0, (mid - r.top) / r.height));
+      }));
+    };
+    meet();
+    window.addEventListener('scroll', meet, { passive: true });
+    window.addEventListener('resize', meet);
+    return () => { window.removeEventListener('scroll', meet); window.removeEventListener('resize', meet); };
+  }, [pad]);
+  return (
+    <div className="verhaalbalk" aria-hidden="true">
+      {vul.map((v, i) => <i key={`${pad}-${i}`}><b style={{ transform: `scaleX(${v})` }} /></i>)}
+    </div>
+  );
+}
+
 /* ---------------------------------------------------------------- hero */
 export function Hero() {
   const { cfg, logo } = useOntwerp();
   const show = { ...cfg, led: cfg.led === 'uit' ? 'rgb' : cfg.led };
   return (
-    <section className="hero">
+    <section className="hero" id="top">
+      <Glans className="hero__glans" />
+      <Decor items={[['ster', 'var(--geel)', 3, 78, 34, 0], ['hart', 'var(--roze)', 44, 10, 26, -12], ['ring', 'var(--geel)', 48, 84, 40], ['ster', '#fff', 93, 6, 22], ['at', '#fff', 41, 58, 30, 10], ['rondje', 'var(--roze)', 96, 88, 18]]} />
       <div className="hero__tekst">
-        <p className="hero__voor">Voor salons, barbers en horeca</p>
-        <h1>Een spiegel die gepost wil worden.</h1>
+        <div className="hero__stickers">
+          <Sticker soort="plek" draai={-4}>Salons · barbers · horeca</Sticker>
+          <Sticker soort="noem" draai={3}>{cfg.naam || 'jouwnaam'}</Sticker>
+        </div>
+        <h1>Een spiegel die <span className="storytekst">gepost</span> wil worden.</h1>
         <p className="hero__lead">Jouw naam en logo op een spiegel in de vorm van een social post. Elke selfie die ervoor gemaakt wordt, is reclame voor jou.</p>
         <div className="hero__acties">
-          <a className="knop knop--roze knop--groot" href="#ontwerp">Ontwerp de jouwe</a>
+          <Link className="knop knop--roze knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
           <span className="hero__prijs">vanaf <b>{euro(VANAF)}</b></span>
         </div>
         <Zekerheid />
       </div>
-      <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={show} logo={logo} className="hero__muur" interactief />
+      <div className="hero__beeld">
+        <Muur foto="/foto/salon.jpg" kleur="var(--kobalt-diep)" cfg={show} logo={logo} className="hero__muur" interactief />
+        <span className="hero__hint">Dubbeltik op de spiegel</span>
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------------- verhaal */
+const SLIDES = [
+  { kleur: 'kobalt', tekst: <>Wij maken al jaren <span className="storytekst">reclame.</span></> },
+  { kleur: 'geel', tekst: <>Borden. Gevels. Auto’s. Het hangt, het rijdt, het wordt <span className="storytekst">gezien.</span></> },
+  { kleur: 'roze', tekst: <>Maar de beste reclame maakt je <span className="storytekst storytekst--geel">klant zelf.</span></> },
+  { kleur: 'inkt', tekst: <>Dus maakten we een spiegel die gepost <span className="storytekst">wil worden.</span></>, einde: true },
+];
+const DUUR = 4500;
+
+export function Verhaal() {
+  const { cfg, logo } = useOntwerp();
+  const [nu, setNu] = useState(0);
+  const [loopt, setLoopt] = useState(true);
+  const doos = useRef(null);
+
+  useEffect(() => {
+    const stil = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const io = new IntersectionObserver(([e]) => setLoopt(e.isIntersecting && !stil), { threshold: 0.5 });
+    if (doos.current) io.observe(doos.current);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!loopt || nu === SLIDES.length - 1) return;
+    const t = setTimeout(() => setNu((n) => n + 1), DUUR);
+    return () => clearTimeout(t);
+  }, [nu, loopt]);
+
+  const tik = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const terug = e.clientX - r.left < r.width / 3;
+    setNu((n) => Math.max(0, Math.min(SLIDES.length - 1, n + (terug ? -1 : 1))));
+  };
+  const s = SLIDES[nu];
+
+  return (
+    <section className="verhaal" id="verhaal">
+      <Decor items={[['ster', 'var(--roze)', 4, 12, 30], ['hart', 'var(--geel)', 50, 80, 28, 14], ['ring', 'var(--kobalt)', 92, 8, 36], ['ster', 'var(--kobalt)', 47, 18, 18]]} />
+      <div className="verhaal__tekst">
+        <Sticker soort="tekst" draai={-3}>Ons verhaal</Sticker>
+        <h2>Reclame die je klant <span className="storytekst storytekst--roze">zelf maakt.</span></h2>
+        <p>Socialmediaspiegel komt uit de werkplaats van Sign Company. We maken borden, gevelreclame en autobelettering voor ondernemers. Een bord hangt stil. Een spiegel wordt gedeeld.</p>
+        <p>Daarom bouwen we hem zoals we alles bouwen: in onze eigen werkplaats, met echt glas, jouw kleuren en jouw naam erop.</p>
+      </div>
+
+      <div className="telefoon telefoon--verhaal" ref={doos}>
+        <div className={`telefoon__scherm slide slide--${s.kleur}`} onClick={tik} role="button" tabIndex={0}
+          aria-label={`Verhaal, deel ${nu + 1} van ${SLIDES.length}. Tik om verder te gaan.`}
+          onKeyDown={(e) => { if (e.key === 'ArrowRight' || e.key === 'Enter') setNu((n) => Math.min(SLIDES.length - 1, n + 1)); if (e.key === 'ArrowLeft') setNu((n) => Math.max(0, n - 1)); }}>
+          <div className="story__balk">
+            {SLIDES.map((_, i) => (
+              <i key={i} className={i < nu ? 'is-vol' : ''}>
+                {i === nu && <b key={nu} className={loopt && !SLIDES[i].einde ? 'is-bezig' : 'is-vol'} style={{ '--duur': `${DUUR}ms` }} />}
+              </i>
+            ))}
+          </div>
+          <div className="story__kop"><span className="story__avatar story__avatar--merk" />socialmediaspiegel <small>{nu + 1} / {SLIDES.length}</small></div>
+          <p key={nu} className="slide__tekst">{s.tekst}</p>
+          {s.einde && (
+            <div className="slide__einde">
+              <div className="slide__spiegel"><Spiegel cfg={{ ...cfg, vorm: 'telefoon', led: 'rgb' }} logo={logo} /></div>
+              <Link className="knop knop--roze" href="/ontwerpen" onClick={(e) => e.stopPropagation()}>Ontwerp de jouwe</Link>
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   );
 }
@@ -67,15 +205,17 @@ export function Hero() {
 export function Reclame() {
   const { cfg, logo } = useOntwerp();
   return (
-    <section className="reclame">
+    <section className="reclame" id="reclame">
+      <Decor items={[['ster', 'var(--geel)', 58, 14, 36], ['hart', 'var(--roze)', 94, 70, 30, 12], ['at', 'var(--kobalt)', 3, 88, 30, -8], ['rondje', 'var(--geel)', 62, 90, 16]]} />
       <div className="reclame__tekst">
-        <h2>Elke selfie is reclame.</h2>
+        <h2>Elke selfie is <span className="storytekst storytekst--geel">reclame.</span></h2>
         <p className="reclame__lead">Wie voor jouw spiegel staat, zet jouw naam in zijn story. Zonder dat je erom vraagt.</p>
         <dl className="reclame__punten">
           <div><dt>Je naam staat in de foto</dt><dd>Niet in een tag die je kunt wegklikken, maar in het beeld zelf.</dd></div>
           <div><dt>Klanten taggen je vanzelf</dt><dd>Je accountnaam staat erop, dus ze weten precies wie ze moeten taggen.</dd></div>
           <div><dt>Een plek die mensen opzoeken</dt><dd>Een fotoplek waar klanten voor terugkomen, en hun vrienden ook.</dd></div>
         </dl>
+        <Poll />
       </div>
       <div className="telefoon" aria-label="Voorbeeld van een story met jouw spiegel">
         <div className="telefoon__scherm">
@@ -198,8 +338,9 @@ export function Ontwerper() {
 
   return (
     <section className="ontwerp" id="ontwerp">
+      <Decor items={[['ster', 'var(--geel)', 90, 4, 34], ['hart', 'var(--roze)', 60, 6, 24, -10], ['ring', 'rgba(255,255,255,.5)', 2, 30, 30]]} />
       <div className="ontwerp__kop">
-        <h2>Ontwerp je spiegel.</h2>
+        <h2>Ontwerp je <span className="storytekst storytekst--roze">spiegel.</span></h2>
         <p>Je ziet meteen hoe hij wordt. Tik op het hartje, of kijk er zelf in.</p>
       </div>
 
@@ -275,18 +416,23 @@ export function Ontwerper() {
 }
 
 /* ---------------------------------------------------------------- voorbeelden */
-export function Voorbeelden({ items }) {
+export function Voorbeelden({ items, titel = 'Zo hangt hij bij anderen.', meer = false }) {
   const { setCfg } = useOntwerp();
+  const router = useRouter();
   const gebruik = (cfg) => {
     setCfg((c) => ({ ...c, ...cfg }));
-    document.getElementById('ontwerp')?.scrollIntoView({ behavior: 'smooth' });
+    router.push('/ontwerpen');
   };
   return (
-    <section className="voorbeelden">
-      <h2>Zo hangt hij bij anderen.</h2>
-      <div className="voorbeelden__rij">
+    <section className="voorbeelden" id="voorbeelden">
+      <Decor items={[['ster', 'var(--roze)', 94, 6, 30], ['hart', 'var(--geel)', 70, 3, 24, 10]]} />
+      <div className="voorbeelden__kop">
+        <h2>{titel}</h2>
+        {meer && <Link className="knop knop--inkt" href="/voorbeelden">Bekijk alle voorbeelden</Link>}
+      </div>
+      <div className={`voorbeelden__rij${items.length > 3 ? ' voorbeelden__rij--veel' : ''}`}>
         {items.map((v) => (
-          <figure key={v.tag}>
+          <figure key={v.cfg.naam}>
             <Muur foto={v.foto} kleur={v.kleur} cfg={v.cfg} />
             <figcaption>
               <span><b>{v.tag}</b>{VORMEN[v.cfg.vorm].label} · {kaderNaam(v.cfg)} · {LED[v.cfg.led].label}</span>
@@ -324,6 +470,7 @@ export function Bestellen() {
 
   return (
     <section className="bestellen" id="bestellen">
+      <Decor items={[['ster', 'var(--roze)', 46, 8, 34], ['hart', 'var(--kobalt)', 2, 86, 26, -12], ['ring', 'var(--roze)', 95, 90, 34]]} />
       <div className="bestellen__kop">
         <h2>Bijna klaar.</h2>
         <p>Laat je gegevens achter. Je krijgt eerst een digitale proef. We maken hem pas, en je betaalt pas, als jij akkoord geeft.</p>

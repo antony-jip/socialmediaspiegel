@@ -50,9 +50,25 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
   const kader = kaderKleur(cfg);
   const accent = kader.toLowerCase() === '#ff2d87' ? '#ffffff' : '#ff2d87';
 
+  const [vlucht, setVlucht] = useState([]);
+  const [groot, setGroot] = useState(0);
+
+  const vlieg = () => {
+    const id = Date.now();
+    setVlucht((v) => [...v, id]);
+    setTimeout(() => setVlucht((v) => v.filter((x) => x !== id)), 1200);
+  };
   const like = () => {
     setExtra((e) => (e ? 0 : 1));
     setPop((p) => p + 1);
+    if (!extra) vlieg();
+  };
+  // Dubbeltik op het glas: altijd liken, zoals in de app.
+  const dubbel = () => {
+    setExtra(1);
+    setPop((p) => p + 1);
+    setGroot((g) => g + 1);
+    vlieg();
   };
 
   return (
@@ -81,8 +97,11 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
           </span>
         </div>
 
-        <div className="spiegel__glas">
+        <div className="spiegel__glas" onDoubleClick={interactief ? dubbel : undefined}>
           {video}
+          {interactief && groot > 0 && (
+            <span key={groot} className="spiegel__groothart" aria-hidden="true"><Hart vol /></span>
+          )}
           <span className="spiegel__glans" aria-hidden="true" />
         </div>
 
@@ -90,6 +109,11 @@ export default function Spiegel({ cfg, logo, video, interactief = false }) {
           {interactief ? (
             <button type="button" className={`spiegel__like${extra ? ' is-aan' : ''}`} onClick={like} aria-pressed={!!extra} aria-label="Like">
               <span key={pop} className="spiegel__hart"><Hart vol /></span>
+              {vlucht.map((id) => (
+                <span key={id} className="spiegel__vlucht" aria-hidden="true">
+                  {[0, 1, 2, 3, 4].map((i) => <i key={i} style={{ '--i': i }}><Hart vol /></i>)}
+                </span>
+              ))}
             </button>
           ) : (
             <span className="spiegel__like is-aan"><span className="spiegel__hart"><Hart vol /></span></span>
