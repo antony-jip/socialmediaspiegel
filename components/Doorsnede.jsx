@@ -3,6 +3,7 @@ const DELEN = [
   ['glas', 'Spiegelglas 4 mm met veiligheidsfolie'],
   ['boven', 'Bovenplaat met folie in jouw kleur'],
   ['onder', 'Onderplaat Dibond 3 mm'],
+  ['rand', 'Zwarte rubberen rand rondom'],
   ['koker', 'Aluminium koker, houdt hem van de muur'],
   ['led', 'Glow: LED-strip rondom (optie)'],
 ];
@@ -24,6 +25,7 @@ export default function Doorsnede() {
         <rect className="ds-glas" x="140" y="40" width="400" height="16" rx="1" />
         <rect className="ds-boven" x="20" y="40" width="118" height="16" rx="1" />
         <rect className="ds-onder" x="20" y="60" width="520" height="12" rx="1" />
+        <path className="ds-rand" d="M12 34 H44 V40 H20 V72 H44 V78 H12 Z" />
         <rect className="ds-koker" x="260" y="76" width="80" height="162" rx="2" />
         <rect className="ds-koker-binnen" x="268" y="84" width="64" height="146" rx="1" />
         <rect className="ds-led" x="251" y="136" width="9" height="40" rx="2" />

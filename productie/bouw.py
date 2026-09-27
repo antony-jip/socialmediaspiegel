@@ -30,6 +30,8 @@ DIBOND3_KG_M2, DIBOND4_KG_M2, GLAS_KG_M2, KOKER_KG_M = 3.8, 4.8, 10.0, 0.62
 LED_W_M = 10
 
 omtrek_koker = 2 * (FW + FH) / 1000
+RAND, LIP = 2, 6                              # rubber U-profiel: wand en lipbreedte
+omtrek_plaat = (2 * (W + H) - 8 * R + 2 * math.pi * R) / 1000
 plaat_m2 = (W * H - (4 - math.pi) * R * R) / 1e6
 gewicht = (
     plaat_m2 * DIBOND3_KG_M2
@@ -141,6 +143,7 @@ def blad1():
     # vooraanzicht
     ox, oy = 30, 42
     o.append(titel(ox, oy - 12, "Vooraanzicht", "1:10"))
+    o.append(rrect(-RAND, -RAND, W + 2 * RAND, H + 2 * RAND, R + RAND, "", s, ox, oy, 'fill="#111"'))
     o.append(rrect(0, 0, W, H, R, "plaat", s, ox, oy))
     for _, y1, y2 in PRINT:
         o.append(rrect(30, y1, W - 60, y2 - y1, 4, "print", s, ox, oy))
@@ -152,7 +155,7 @@ def blad1():
     o.append(maat_v(oy + MY * s, oy + (MY + MH) * s, ox + W * s + 5, "860", ox + (MX + MW) * s))
     o.append(maat_v(oy, oy + MY * s, ox + W * s + 10, "180", ox + W * s))
     o.append(maat_v(oy + (MY + MH) * s, oy + H * s, ox + W * s + 10, "160", ox + W * s))
-    o.append(tekst(ox, oy + H * s + 12, "R72 buitenhoeken · spiegel rechte hoeken", "klein"))
+    o.append(tekst(ox, oy + H * s + 12, "R72 buitenhoeken · spiegel rechte hoeken · zwarte rubberen rand", "klein"))
     o.append(tekst(ox, oy + H * s + 15.5, "wit = bovenplaat 4 mm met folie · roze = opdruk", "klein"))
 
     # achteraanzicht (gespiegeld getekend: links = rechts van voorkant)
@@ -188,6 +191,8 @@ def blad1():
     o.append(f'<rect x="{dx}" y="{y_voor}" width="{(MX - .5) * d}" height="{4 * d}" class="plaat"/>')
     o.append(f'<line x1="{dx}" y1="{y_voor - .15}" x2="{dx + (MX - .5) * d}" y2="{y_voor - .15}" stroke="#ff2d87" stroke-width=".5"/>')
     o.append(f'<rect x="{dx}" y="{y_onder}" width="{lengte * d}" height="{3 * d}" class="plaat"/>')
+    stapel = y_onder + 3 * d  # onderkant onderplaat
+    o.append(f'<path d="M{dx - RAND * d} {y_voor - 1.5 * d} H{dx + LIP * d} V{y_voor} H{dx} V{stapel} H{dx + LIP * d} V{stapel + 1.5 * d} H{dx - RAND * d} Z" fill="#111"/>')
     o.append(f'<rect x="{dx + KI * d}" y="{y_kok}" width="{KB * d}" height="{KD * d}" class="koker"/>')
     o.append(f'<rect x="{dx + (KI + 2) * d}" y="{y_kok + 2 * d}" width="{(KB - 4) * d}" height="{(KD - 4) * d}" fill="#fff" stroke="#111" stroke-width=".15"/>')
     o.append(f'<rect x="{dx + (KI - 2) * d}" y="{y_kok + 15 * d}" width="{2 * d}" height="{10 * d}" fill="#f5a300" stroke="#111" stroke-width=".2"/>')
@@ -196,17 +201,18 @@ def blad1():
     o.append(tekst(dx - 20, y_muur + 10, "muur", "klein"))
     o.append(maat_h(dx, dx + MX * d, y_glas - 5, "30", y_glas))
     o.append(maat_h(dx, dx + KI * d, y_muur + 16, "60", y_muur + 6))
-    o.append(maat_v(y_voor, y_muur, dx - 26, "49 totaal", dx - 20))
+    o.append(maat_v(y_voor, y_muur, dx - 26, "49 (+1,5 rand)", dx - 20))
     o.append(maat_v(y_kok, y_muur, dx + (KI + KB) * d + 5, "40", dx + (KI + KB) * d))
     lab = [  # (doel x, doel y, label)
         (dx + 100, y_voor + 2, "spiegel 4 mm + veiligheidsfolie, spiegelkit + VHB 1 mm"),
         (dx + 12, y_voor + .2, "folie + laminaat op bovenplaat Dibond 4 mm, VHB 1 mm"),
         (dx + 100, y_onder + 1.5, "onderplaat Dibond 3 mm"),
+        (dx - 1, y_voor + 6, "zwart rubber U-profiel met klemkern, plaatrand 8 mm"),
         (dx + (KI + KB) * d - 1, y_kok + 8, "alu koker 40 × 20 × 2, verlijmd"),
         (dx + (KI - 1) * d, y_kok + 20, "optie: LED COB 24 V direct op koker"),
     ]
     for i, (tx, ty, t) in enumerate(lab):
-        ly = dy - 10 + i * 7 if i < 3 else y_kok + 10 + (i - 3) * 12
+        ly = dy - 10 + i * 7 if i < 4 else y_kok + 12 + (i - 4) * 12
         lx = dx + lengte + 8
         o.append(f'<polyline points="{tx},{ty} {lx - 3},{ly} {lx - 1},{ly}" fill="none" class="hulp"/>')
         o.append(f'<circle cx="{tx}" cy="{ty}" r=".5" fill="#111"/>')
@@ -227,6 +233,7 @@ def blad1():
         ("9", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
         ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, koker op onderplaat"),
         ("11", "1", "Boormal B (papier 1:1) + 2× schroef 5 mm en plug"),
+        ("12", f"{nl(omtrek_plaat, 1)} m", "Zwart rubber U-profiel met stalen klemkern, voor plaatrand 8 mm"),
     ]
     for i, (nr, aantal, oms) in enumerate(regels):
         yy = sy + 7 + i * 5.4
@@ -234,7 +241,7 @@ def blad1():
         o.append(tekst(sx + 7, yy, aantal, "t"))
         o.append(tekst(sx + 20, yy, oms, "t"))
         o.append(f'<line x1="{sx}" y1="{yy + 1.8}" x2="{sx + 196}" y2="{yy + 1.8}" class="dun"/>')
-    o.append(tekst(sx, sy + 70, f"Standaard onverlicht. Gewicht ± {nl(gewicht, 1)} kg · met licht ± {led_w:.0f} W · uitsteek van muur 49 mm", "t"))
+    o.append(tekst(sx, sy + 76, f"Standaard onverlicht. Gewicht ± {nl(gewicht, 1)} kg · met licht ± {led_w:.0f} W · uitsteek van muur 49 mm", "t"))
 
     o.append(titelblok("1 van 2", "aanzichten, doorsnede, stuklijst"))
     return blad("".join(o))
@@ -288,6 +295,7 @@ def blad2():
         ["Onderplaat tegen de nokken, bovenplaat erop met VHB,", "randen gelijk tegen dezelfde nokken."],
         ["Spiegel in het venster: VHB-stroken + verticale rupsen", "spiegelkit, niet vol-vlaks. Voorvlak gelijk met folie."],
         ["Omdraaien, mal C tegen de nokken, koker verlijmen."],
+        ["Rubber U-profiel om de buitenrand klemmen: start en eind", "onderaan in het midden, naad met een druppel kit."],
         ["24 uur laten uitharden voor transport."],
         ["Sleutelgatplaatjes in bovenregel. Bij licht: COB-strip rondom", "op buitenzijde koker, hoeken knippen + doorverbinden."],
         ["Bij licht: test in donkere ruimte op 40 mm van een witte", "wand: gloed gelijkmatig, hoeken zonder gat in de gloed."],
@@ -307,7 +315,7 @@ def blad2():
         "Koker gelast (ring) of met hoekverbinders.",
         "Hoekverbinding strip: connector of solderen.",
         "Leverancier glas + folie: kit laten vrijgeven.",
-        "Folie om de buitenrand vouwen of Dibond-kern zichtbaar.",
+        "Rand: rubber zwart (standaard) of lakken, op het proefstuk kiezen.",
         "Proefstuk: lichtbeeld op 40 mm, zo nodig 50 mm koker.",
     ]
     for i, t in enumerate(open_):
