@@ -6,7 +6,7 @@ export default function Voet() {
   return (
     <footer className="voet">
       <div className="voet__slot">
-        <p className="voet__slogan">Word gepost.</p>
+        <p className="voet__slogan">Word gepost<span className="punt">.</span></p>
         <Link className="knop knop--framboos" href="/ontwerpen">Ontwerp de jouwe</Link>
       </div>
       <div className="voet__regel">

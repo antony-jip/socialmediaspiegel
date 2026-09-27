@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Zin from '@/components/Zin';
 import { STAPPEN } from '@/lib/inhoud';
 
 export function Stappen() {
@@ -14,12 +15,15 @@ export function Stappen() {
   );
 }
 
-export function Paginakop({ label, titel, lead, kleur = 'lila' }) {
+export function Paginakop({ label, titel, lead, kleur = 'lila', beeld, alt = '' }) {
   return (
-    <section className={`paginakop paginakop--${kleur}`}>
-      {label && <span className="paginakop__label">{label}</span>}
-      <h1>{titel}</h1>
-      {lead && <p>{lead}</p>}
+    <section className={`paginakop paginakop--${kleur}${beeld ? ' paginakop--beeld' : ''}`}>
+      <div>
+        {label && <span className="paginakop__label">{label}</span>}
+        <h1><Zin>{titel}</Zin></h1>
+        {lead && <p>{lead}</p>}
+      </div>
+      {beeld && <img className="paginakop__beeld" src={beeld} alt={alt} />}
     </section>
   );
 }
@@ -27,7 +31,7 @@ export function Paginakop({ label, titel, lead, kleur = 'lila' }) {
 export function Slotblok() {
   return (
     <section className="slotblok">
-      <h2>Klaar om gepost te worden?</h2>
+      <h2><Zin>Klaar om gepost te worden?</Zin></h2>
       <p>Ontwerp je spiegel in twee minuten. Je krijgt eerst een digitale proef, en we maken hem pas na jouw akkoord.</p>
       <Link className="knop knop--framboos knop--groot" href="/ontwerpen">Ontwerp de jouwe</Link>
     </section>

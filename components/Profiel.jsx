@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { klantenNodig, Muur, useGebruikOntwerp, useOntwerp } from '@/components/Ontwerp';
 import { Beeldmerk } from '@/components/Merk';
+import Zin from '@/components/Zin';
 import { euro, formaatVan, KADERS, kaderNaam, LED, prijsVan, VANAF, VORMEN } from '@/lib/spiegel';
 import { MAKEN, VOORBEELDEN, VRAGEN } from '@/lib/inhoud';
 
@@ -103,7 +104,7 @@ function StoryKijker({ story, onSluit }) {
           </button>
         </div>
         <div className="kijker__vlak" onClick={tik}>
-          <p key={`k${nu}`} className="kijker__tekst">{s.kop}</p>
+          <p key={`k${nu}`} className="kijker__tekst"><Zin>{s.kop}</Zin></p>
           {s.tekst && <p key={`t${nu}`} className="kijker__klein">{s.tekst}</p>}
         </div>
         {(s.cta || s.link) && (
@@ -164,7 +165,7 @@ function Tegel({ post, stil }) {
   }
   return (
     <span className={`tegel__tekst story-${post.kleur}`}>
-      <b>{post.kop}</b>
+      <b><Zin>{post.kop}</Zin></b>
       {post.soort === 'kleuren' && (
         <span className="tegel__stalen">{Object.values(KADERS).map((k) => <i key={k.kleur} style={{ background: k.kleur }} />)}</span>
       )}
@@ -192,7 +193,7 @@ function PostVenster({ post, onSluit, onStory }) {
           {v && (post.reel && !stil
             ? <video className="venster__foto" src={post.reel} poster={v.beeld} autoPlay muted loop playsInline />
             : <img className="venster__foto" src={v.beeld} alt={v.alt} />)}
-          {!v && <span className={`venster__vlak story-${post.kleur}`}><b>{post.kop}</b></span>}
+          {!v && <span className={`venster__vlak story-${post.kleur}`}><b><Zin>{post.kop}</Zin></b></span>}
         </div>
         <div className="venster__zij">
           <header className="venster__kop">

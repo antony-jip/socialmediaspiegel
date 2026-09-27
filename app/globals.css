@@ -491,6 +491,53 @@ a.tegel { display: block; }
 .bedankt-pagina__wat { padding: 8px 12px; border-radius: 10px; background: rgba(255, 255, 255, 0.7); font-weight: 600; font-size: 0.95rem !important; }
 .sticker { display: inline-block; padding: 6px 12px; border-radius: 8px; background: var(--vlak); font-size: 13px; font-weight: 700; transform: rotate(var(--draai, 0)); }
 
+/* ---------- leesteken sluit aan bij krappe koppen ---------- */
+.punt { margin-left: -0.07em; }
+
+/* ---------- paginakop met beeld ---------- */
+.paginakop--beeld { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr); align-items: center; gap: clamp(28px, 5vw, 72px); }
+.paginakop__beeld { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 22px; }
+
+/* ---------- maken ---------- */
+.maken__kop p { margin-top: 12px; max-width: 46ch; color: #4a4258; }
+.maken__raster { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 36px; }
+.maken__foto { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 22px; }
+.maken__lijst { margin: 0; display: grid; gap: 0; }
+.maken__lijst div { padding: 20px 0; border-top: 1px solid var(--lijn); }
+.maken__lijst div:first-child { border-top: 0; }
+.maken__lijst dt { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; }
+.maken__lijst dd { margin: 6px 0 0; color: #4a4258; max-width: 48ch; }
+.maken__doorsnede { display: grid; grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr); gap: clamp(24px, 4vw, 56px); align-items: center; margin-top: 64px; padding: clamp(22px, 3vw, 36px); border-radius: 24px; background: var(--vlak); box-shadow: inset 0 0 0 1px var(--lijn); }
+.maken__doorsnede h3 { font-size: 1.3rem; margin-bottom: 8px; }
+.maken__doorsnede p { color: #4a4258; }
+.doorsnede { margin: 0; }
+.doorsnede svg { width: 100%; height: auto; display: block; }
+.ds-glas { fill: #e6ebf1; stroke: #8fa0b3; stroke-width: 1.2; }
+.ds-boven { fill: var(--framboos); }
+.ds-onder { fill: #d9d3e4; stroke: #a79cbd; stroke-width: 1; }
+.ds-koker { fill: #eceaf1; stroke: var(--inkt); stroke-width: 1.5; }
+.ds-koker-binnen { fill: var(--vlak); stroke: #b9b3c6; stroke-width: 1; }
+.ds-led { fill: #ffb86b; }
+.ds-maat line { stroke: var(--grijs); stroke-width: 1.2; }
+.ds-maat text, .ds-muurtekst { font: 700 14px var(--f-tekst), sans-serif; fill: var(--grijs); }
+.doorsnede figcaption ul { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 16px 0 0; padding: 0; list-style: none; font-size: 13px; color: #4a4258; }
+.doorsnede figcaption li { display: flex; align-items: center; gap: 7px; }
+.ds-staal { width: 14px; height: 10px; border-radius: 3px; }
+.ds-staal--glas { background: #e6ebf1; box-shadow: inset 0 0 0 1px #8fa0b3; }
+.ds-staal--boven { background: var(--framboos); }
+.ds-staal--onder { background: #d9d3e4; box-shadow: inset 0 0 0 1px #a79cbd; }
+.ds-staal--koker { background: #eceaf1; box-shadow: inset 0 0 0 1.5px var(--inkt); }
+.ds-staal--led { background: #ffb86b; }
+
+/* ---------- vragen-raster ---------- */
+.vragen-raster { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: clamp(28px, 5vw, 72px); align-items: start; padding: 72px var(--rand) 88px; }
+.vragen-raster .vragen { padding: 0; max-width: none; }
+.vragen__kaart { position: sticky; top: 96px; overflow: hidden; border-radius: 24px; background: var(--vlak); box-shadow: inset 0 0 0 1px var(--lijn); }
+.vragen__kaart img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.vragen__kaart > div { display: grid; gap: 12px; padding: 22px; }
+.vragen__kaart p { color: #4a4258; font-size: 15px; }
+.vragen__kaart .knop { width: 100%; }
+
 /* ---------- vragen ---------- */
 .vragen { max-width: calc(820px + 2 * var(--rand)); }
 .vragen details { border-bottom: 1px solid var(--lijn); }
@@ -565,6 +612,9 @@ a.tegel { display: block; }
   .mobielbalk b { display: block; font: 800 1.35rem/1.1 var(--display); }
 
   .verhaal, .terug, .bestellen { grid-template-columns: minmax(0, 1fr); }
+  .paginakop--beeld, .maken__raster, .maken__doorsnede, .vragen-raster { grid-template-columns: minmax(0, 1fr); }
+  .vragen__kaart { position: static; }
+  .maken__foto { aspect-ratio: 4 / 3; }
   .verhaal { justify-items: center; }
   .verhaal__tekst { justify-self: stretch; }
   .stappen ol { grid-template-columns: minmax(0, 1fr); }
