@@ -542,6 +542,15 @@ a.tegel { display: block; }
 .zakelijk li { position: relative; padding-left: 26px; color: #4a4258; }
 .zakelijk li::before { content: ''; position: absolute; left: 0; top: 0.45em; width: 14px; height: 8px; border-left: 2.5px solid var(--framboos); border-bottom: 2.5px solid var(--framboos); transform: rotate(-45deg); }
 
+.ophangen { padding: 72px var(--rand) 88px; background: var(--mint); }
+.ophangen__kop h2 { margin: 8px 0 12px; }
+.ophangen__kop p { max-width: 50ch; color: #4a4258; }
+.ophangen__stappen { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: ophang; }
+.ophangen__stappen li { counter-increment: ophang; padding: 22px; border-radius: 20px; background: var(--vlak); }
+.ophangen__stappen li::before { content: counter(ophang); display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 14px; border-radius: 50%; background: var(--framboos); color: #fff; font-weight: 800; }
+.ophangen__stappen h3 { margin-bottom: 6px; }
+.ophangen__stappen p { color: #4a4258; font-size: 15px; }
+
 /* ---------- vragen-raster ---------- */
 .vragen-raster { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: clamp(28px, 5vw, 72px); align-items: start; padding: 72px var(--rand) 88px; }
 .vragen-raster .vragen { padding: 0; max-width: none; }
@@ -626,6 +635,7 @@ a.tegel { display: block; }
 
   .verhaal, .terug, .bestellen { grid-template-columns: minmax(0, 1fr); }
   .paginakop--beeld, .maken__raster, .maken__doorsnede, .vragen-raster, .zakelijk { grid-template-columns: minmax(0, 1fr); }
+  .ophangen__stappen { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .vragen__kaart { position: static; }
   .maken__foto { aspect-ratio: 4 / 3; }
   .verhaal { justify-items: center; }
@@ -648,6 +658,7 @@ a.tegel { display: block; }
   .totaal .knop { width: 100%; }
   .bon { grid-template-columns: 76px minmax(0, 1fr); }
   .maken__rij { grid-template-columns: minmax(0, 1fr); }
+  .ophangen__stappen { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   .spiegel__hart, .led--rgb, .spiegel__groothart, .kijker__tekst, .kijker__klein, .slide__tekst { animation: none; }
