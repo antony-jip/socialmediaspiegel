@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
 import { Beeldmerk } from '@/components/Merk';
-import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, OPHANGEN, ophangVan, prijsVan, SNOER, snoerVan, START, VANAF, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, leveringNaam, OPHANGEN, ophangVan, prijsVan, SNOER, snoerVan, START, VANAF, VERZEND_L, VORMEN } from '@/lib/spiegel';
 import { RUIMTES } from '@/lib/inhoud';
 
 const OntwerpCtx = createContext(null);
@@ -42,7 +42,7 @@ export function Zekerheid() {
       <li><Vinkje />Echt spiegelglas, geen folie</li>
       <li><Vinkje />Eerst een digitale proef</li>
       <li><Vinkje />Veilig betalen via Mollie</li>
-      <li><Vinkje />Gratis verzending</li>
+      <li><Vinkje />Gratis bezorgd bij S en M</li>
     </ul>
   );
 }
@@ -466,6 +466,24 @@ export function Ontwerper() {
           }[cfg.ophang || 'rail']}</p>
         </div>
 
+        <div className="groep">
+          <h3>Levering</h3>
+          <Keuze
+            label="Hoe krijg je hem?"
+            waarde={cfg.levering || 'bezorgen'}
+            opties={{
+              bezorgen: cfg.formaat === 'l' ? `Bezorgen +${euro(VERZEND_L)}` : 'Bezorgen · gratis',
+              ophalen: 'Ophalen in Enkhuizen · gratis',
+            }}
+            onKies={(v) => zet('levering', v)}
+          />
+          <p className="keuze__noot">{cfg.levering === 'ophalen'
+            ? 'Je krijgt bericht zodra hij klaarstaat. Neem een auto mee waar hij plat in past.'
+            : cfg.formaat === 'l'
+              ? 'De 80 × 160 cm gaat als extra groot pakket, verzekerd en stevig verpakt.'
+              : 'Verzekerd en stevig verpakt, gratis bij 40 × 80 en 60 × 120 cm.'}</p>
+        </div>
+
         <div className="totaal">
           <div>
             <span className="totaal__prijs">{euro(prijsVan(cfg))}</span>
@@ -552,6 +570,7 @@ export function Bestellen() {
             <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
             {snoerVan(cfg) && <div><dt>Snoer</dt><dd>{snoerVan(cfg).label}</dd></div>}
             <div><dt>Ophangen</dt><dd>{ophangVan(cfg).label}</dd></div>
+            <div><dt>Levering</dt><dd>{leveringNaam(cfg)}</dd></div>
             <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
             <div className="bon__totaal"><dt>Totaal</dt><dd>{euro(prijsVan(cfg))}</dd></div>
           </dl>

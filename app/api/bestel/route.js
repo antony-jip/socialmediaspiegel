@@ -1,5 +1,5 @@
 import { controleer, klantmailOntwerp, mail, mollie, omschrijving, rijen, tabel } from '@/lib/bestelling';
-import { euro, formaatVan, kaderNaam, LED, ophangVan, prijsVan, snoerVan, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, kaderNaam, LED, leveringNaam, ophangVan, prijsVan, snoerVan, VORMEN } from '@/lib/spiegel';
 import { maakVoorbeeld } from '@/lib/voorbeeld';
 
 export async function POST(req) {
@@ -23,7 +23,7 @@ export async function POST(req) {
         locale: 'nl_NL',
         metadata: {
           naam: contact.naam?.slice(0, 80), email: contact.email?.slice(0, 120), telefoon: contact.telefoon?.slice(0, 30),
-          bedrijf: contact.bedrijf?.slice(0, 80), account: cfg.naam, vorm: cfg.vorm, formaat: cfg.formaat, led: cfg.led, ophang: cfg.ophang || 'rail', snoer: cfg.led === 'uit' ? '' : cfg.snoer || '15',
+          bedrijf: contact.bedrijf?.slice(0, 80), account: cfg.naam, vorm: cfg.vorm, formaat: cfg.formaat, led: cfg.led, ophang: cfg.ophang || 'rail', snoer: cfg.led === 'uit' ? '' : cfg.snoer || '15', levering: cfg.levering || 'bezorgen',
           kader: cfg.kader === 'eigen' ? cfg.kaderKleur : cfg.kader, ondertitel: cfg.ondertitel?.slice(0, 40),
         },
       }),
@@ -39,7 +39,7 @@ export async function POST(req) {
   const plaatje = png ? [{ filename: `socialmediaspiegel-${cfg.naam || 'ontwerp'}.png`, content: png.toString('base64') }] : [];
   const specs = [
     ['Account', `@${cfg.naam}`], ['Model', `${VORMEN[cfg.vorm].label}, ${formaatVan(cfg).maat}`],
-    ['Kader', kaderNaam(cfg)], ['Licht', LED[cfg.led].label], ...(snoerVan(cfg) ? [['Snoer', snoerVan(cfg).label]] : []), ['Ophangen', ophangVan(cfg).label], ['Prijs', euro(bedrag)],
+    ['Kader', kaderNaam(cfg)], ['Licht', LED[cfg.led].label], ...(snoerVan(cfg) ? [['Snoer', snoerVan(cfg).label]] : []), ['Ophangen', ophangVan(cfg).label], ['Levering', leveringNaam(cfg)], ['Prijs', euro(bedrag)],
   ];
 
   await Promise.all([
