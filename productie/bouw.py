@@ -329,37 +329,31 @@ def rrect_pad(x, y, w, h, r, s=1.0, ox=0, oy=0):
 
 # ---------------------------------------------------------------- 1:1-bestanden
 def dxf(naam, lagen):
-    """Minimale DXF R12: per laag afgeronde rechthoeken (LINE + ARC), y omhoog."""
+    """DXF R12 in mm: per laag gesloten POLYLINE-contouren (bogen als bulge), cirkels als CIRCLE. Y omhoog."""
     ent = []
+    b = math.tan(math.radians(90) / 4)  # bulge voor een kwartcirkel, tegen de klok in
 
-    def lijn(l, x1, y1, x2, y2):
-        ent.append(f"0\nLINE\n8\n{l}\n10\n{x1}\n20\n{H - y1}\n30\n0\n11\n{x2}\n21\n{H - y2}\n31\n0\n")
-
-    def boog(l, cx, cy, r, a1, a2):
-        ent.append(f"0\nARC\n8\n{l}\n10\n{cx}\n20\n{H - cy}\n30\n0\n40\n{r}\n50\n{a1}\n51\n{a2}\n")
-
-    def cirkel(l, cx, cy, r):
-        ent.append(f"0\nCIRCLE\n8\n{l}\n10\n{cx}\n20\n{H - cy}\n30\n0\n40\n{r}\n")
+    def contour(laag, x, y, w, h, r):
+        y = H - y - h  # tekening: y omlaag; DXF: y omhoog
+        if r <= 0:
+            pts = [(x, y, 0), (x + w, y, 0), (x + w, y + h, 0), (x, y + h, 0)]
+        else:
+            pts = [(x + r, y, 0), (x + w - r, y, b), (x + w, y + r, 0), (x + w, y + h - r, b),
+                   (x + w - r, y + h, 0), (x + r, y + h, b), (x, y + h - r, 0), (x, y + r, b)]
+        ent.append(f"0\nPOLYLINE\n8\n{laag}\n66\n1\n10\n0\n20\n0\n30\n0\n70\n1\n")
+        for px, py, pb in pts:
+            ent.append(f"0\nVERTEX\n8\n{laag}\n10\n{px:.4f}\n20\n{py:.4f}\n30\n0\n" + (f"42\n{pb:.8f}\n" if pb else ""))
+        ent.append(f"0\nSEQEND\n8\n{laag}\n")
 
     for laag, vormen in lagen.items():
         for v in vormen:
             if v[0] == "cirkel":
-                cirkel(laag, *v[1:])
-                continue
-            x, y, w, h, r = v
-            if r <= 0:
-                for a, b in [((x, y), (x + w, y)), ((x + w, y), (x + w, y + h)), ((x + w, y + h), (x, y + h)), ((x, y + h), (x, y))]:
-                    lijn(laag, *a, *b)
-                continue
-            lijn(laag, x + r, y, x + w - r, y)
-            lijn(laag, x + w, y + r, x + w, y + h - r)
-            lijn(laag, x + w - r, y + h, x + r, y + h)
-            lijn(laag, x, y + h - r, x, y + r)
-            boog(laag, x + w - r, y + r, r, 0, 90)
-            boog(laag, x + r, y + r, r, 90, 180)
-            boog(laag, x + r, y + h - r, r, 180, 270)
-            boog(laag, x + w - r, y + h - r, r, 270, 360)
-    (UIT / naam).write_text("0\nSECTION\n2\nENTITIES\n" + "".join(ent) + "0\nENDSEC\n0\nEOF\n")
+                _, cx, cy, r = v
+                ent.append(f"0\nCIRCLE\n8\n{laag}\n10\n{cx}\n20\n{H - cy}\n30\n0\n40\n{r}\n")
+            else:
+                contour(laag, *v)
+    kop = "0\nSECTION\n2\nHEADER\n9\n$ACADVER\n1\nAC1009\n9\n$INSUNITS\n70\n4\n9\n$MEASUREMENT\n70\n1\n0\nENDSEC\n"
+    (UIT / naam).write_text(kop + "0\nSECTION\n2\nENTITIES\n" + "".join(ent) + "0\nENDSEC\n0\nEOF\n")
 
 
 def svg11(naam, paden):
@@ -417,6 +411,8 @@ def main():
 
     buiten = (0, 0, W, H, R)
     dxf("frees-dibond-onder-3mm.dxf", {"FREES_BUITEN": [buiten]})
+    dxf("spiegel-540x860.dxf", {"GLAS_SNIJLIJN": [(MX, MY, MW, MH, MR)]})
+    svg11("spiegel-540x860.svg", [(rrect_pad(MX, MY, MW, MH, MR), "#00f")])
     dxf("frees-dibond-boven-4mm.dxf", {"FREES_BUITEN": [buiten], "FREES_BINNEN": [VENSTER]})
     svg11("frees-dibond-onder-3mm.svg", [(rrect_pad(*buiten), "#000")])
     svg11("frees-dibond-boven-4mm.svg", [(rrect_pad(*buiten), "#000"), (rrect_pad(*VENSTER), "#f00")])
