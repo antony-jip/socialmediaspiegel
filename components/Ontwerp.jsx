@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
 import { Beeldmerk } from '@/components/Merk';
-import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, OPHANGEN, ophangVan, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, OPHANGEN, ophangVan, prijsVan, SNOER, snoerVan, START, VANAF, VORMEN } from '@/lib/spiegel';
 import { RUIMTES } from '@/lib/inhoud';
 
 const OntwerpCtx = createContext(null);
@@ -439,6 +439,17 @@ export function Ontwerper() {
           <Kaderkleur />
           <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} uit={cfg.ophang === 'plak' ? ['warm', 'koel', 'rgb'] : []} />
           {cfg.ophang === 'plak' && <p className="keuze__noot">Glow kan alleen met de ophangrail: de gloed heeft 4 cm ruimte achter de spiegel nodig.</p>}
+          {cfg.led !== 'uit' && (
+            <>
+              <Keuze
+                label="Snoerlengte"
+                waarde={cfg.snoer || '15'}
+                opties={Object.fromEntries(Object.entries(SNOER).map(([id, n]) => [id, n.prijs ? `${n.label} +${euro(n.prijs)}` : `${n.label} · inbegrepen`]))}
+                onKies={(v) => zet('snoer', v)}
+              />
+              <p className="keuze__noot">Van de spiegel tot het stopcontact. Het snoer komt onderaan in het midden uit, met een stekker en een aan-uitschakelaar.</p>
+            </>
+          )}
         </div>
 
         <div className="groep">
@@ -539,6 +550,7 @@ export function Bestellen() {
             <div><dt>Model</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
             <div><dt>Kader</dt><dd>{kaderNaam(cfg)}</dd></div>
             <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
+            {snoerVan(cfg) && <div><dt>Snoer</dt><dd>{snoerVan(cfg).label}</dd></div>}
             <div><dt>Ophangen</dt><dd>{ophangVan(cfg).label}</dd></div>
             <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
             <div className="bon__totaal"><dt>Totaal</dt><dd>{euro(prijsVan(cfg))}</dd></div>

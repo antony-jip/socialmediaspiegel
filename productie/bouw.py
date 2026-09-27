@@ -232,7 +232,7 @@ def blad1():
         ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, rechte hoeken, randen geslepen"),
         ("5", "1", "Ophangrail alu Z-profiel 400 mm: spiegeldeel verlijmd, muurdeel met waterpasje, 40 mm"),
         ("6", f"{nl(omtrek_led, 1)} m", "Optie: LED COB 24 V ± 10 W/m op achterkant onderplaat; warm, koel of RGB"),
-        ("7", "1", f"Optie: voeding 24 V 48–60 W CE + schakelaar, bij RGB controller + afstandsbediening"),
+        ("7", "1", f"Optie: voeding 24 V 48–60 W CE + schakelaar, snoer 1,5 / 3 / 5 m naar keuze; RGB: controller"),
         ("8", "1", "Optie plak-klaar (i.p.v. 5, 13): VHB-tape vooraf op achterkant met folie, geen Glow"),
         ("9", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
         ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, rail en nokjes op onderplaat"),
