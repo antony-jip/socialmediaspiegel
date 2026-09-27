@@ -1,5 +1,6 @@
-import { controleer, mail, mollie, omschrijving, rijen, tabel } from '@/lib/bestelling';
-import { euro, prijsVan } from '@/lib/spiegel';
+import { controleer, klantmailOntwerp, mail, mollie, omschrijving, rijen, tabel } from '@/lib/bestelling';
+import { euro, formaatVan, kaderNaam, LED, prijsVan, VORMEN } from '@/lib/spiegel';
+import { maakVoorbeeld } from '@/lib/voorbeeld';
 
 export async function POST(req) {
   const { cfg, logo, contact } = await req.json().catch(() => ({}));
@@ -23,7 +24,7 @@ export async function POST(req) {
         metadata: {
           naam: contact.naam?.slice(0, 80), email: contact.email?.slice(0, 120), telefoon: contact.telefoon?.slice(0, 30),
           bedrijf: contact.bedrijf?.slice(0, 80), account: cfg.naam, vorm: cfg.vorm, formaat: cfg.formaat, led: cfg.led,
-          kader: cfg.kader === 'eigen' ? cfg.kaderKleur : cfg.kader,
+          kader: cfg.kader === 'eigen' ? cfg.kaderKleur : cfg.kader, ondertitel: cfg.ondertitel?.slice(0, 40),
         },
       }),
     });
@@ -32,13 +33,28 @@ export async function POST(req) {
     return Response.json({ fout: 'De betaling kon niet worden gestart. Probeer het over een minuut opnieuw.' }, { status: 502 });
   }
 
-  // Ontwerp + logo alvast naar de werkplaats; de betaalstatus volgt via de webhook.
-  await mail({
-    onderwerp: `Nieuwe bestelling @${cfg.naam} · ${euro(bedrag)} · wacht op betaling`,
-    html: `<h2>Nieuwe bestelling (${betaling.id})</h2>${tabel(rijen(cfg, contact, [['Mollie', betaling.id]]))}`,
-    logo,
-    antwoordNaar: contact.email,
-  }).catch((e) => console.error(e));
+  // Afbeelding van het ontwerp: voor de klant (bevestiging) en de werkplaats.
+  let png = null;
+  try { png = await maakVoorbeeld(cfg, logo); } catch (e) { console.error('voorbeeld', e); }
+  const plaatje = png ? [{ filename: `socialmediaspiegel-${cfg.naam || 'ontwerp'}.png`, content: png.toString('base64') }] : [];
+  const specs = [
+    ['Account', `@${cfg.naam}`], ['Model', `${VORMEN[cfg.vorm].label}, ${formaatVan(cfg).maat}`],
+    ['Kader', kaderNaam(cfg)], ['Licht', LED[cfg.led].label], ['Prijs', euro(bedrag)],
+  ];
+
+  await Promise.all([
+    mail({
+      onderwerp: `Nieuwe bestelling @${cfg.naam} · ${euro(bedrag)} · wacht op betaling`,
+      html: `<h2>Nieuwe bestelling (${betaling.id})</h2>${tabel(rijen(cfg, contact, [['Mollie', betaling.id]]))}`,
+      logo, bijlagen: plaatje, antwoordNaar: contact.email,
+    }),
+    mail({
+      aan: contact.email,
+      onderwerp: `Je ontwerp voor ${VORMEN[cfg.vorm].label} is binnen`,
+      html: klantmailOntwerp({ contact, specs, checkout: betaling._links.checkout.href }),
+      bijlagen: plaatje,
+    }),
+  ]).catch((e) => console.error(e));
 
   return Response.json({ id: betaling.id, checkout: betaling._links.checkout.href });
 }

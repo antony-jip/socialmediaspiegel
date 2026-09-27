@@ -263,13 +263,14 @@ export default function Profiel() {
             </div>
           </div>
           <ul className="profiel__stats">
+            <li><b>Echt</b> spiegelglas</li>
             <li><b>2</b> modellen</li>
             <li><b>{kleuren}</b> kleuren + je eigen</li>
             <li>vanaf <b>{euro(VANAF)}</b></li>
           </ul>
           <div className="profiel__bio">
             <p className="profiel__titel">Spiegels die gepost willen worden</p>
-            <p>De Story en De Post: echte spiegels in de vorm van een social post, met jouw naam en logo. Voor salons, barbers en horeca. Gemaakt in onze werkplaats bij Sign Company.</p>
+            <p>De Story en De Post: echte spiegels van glas in de vorm van een social post, met jouw naam en logo. Geen spiegelfolie, maar 4 mm spiegelglas. Voor salons, barbers en horeca. Gemaakt in onze werkplaats bij Sign Company.</p>
             <Link className="profiel__link" href="/ontwerpen">socialmediaspiegel.nl/ontwerpen</Link>
           </div>
         </div>

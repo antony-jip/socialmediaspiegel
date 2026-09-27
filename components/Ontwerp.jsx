@@ -39,6 +39,7 @@ const Vinkje = () => (
 export function Zekerheid() {
   return (
     <ul className="zekerheid">
+      <li><Vinkje />Echt spiegelglas, geen folie</li>
       <li><Vinkje />Eerst een digitale proef</li>
       <li><Vinkje />Veilig betalen via Mollie</li>
       <li><Vinkje />Gratis verzending</li>
@@ -371,7 +372,7 @@ export function Ontwerper() {
       <div className="ontwerp__kop">
         <span className="label">Nieuwe spiegel</span>
         <h1>Ontwerp je spiegel</h1>
-        <p>Je ziet meteen hoe hij wordt. Dubbeltik op het glas, of kijk er zelf in.</p>
+        <p>Een echte spiegel van 4 mm glas, met jouw naam en logo. Je ziet meteen hoe hij wordt.</p>
       </div>
 
       <div className="ontwerp__beeld">

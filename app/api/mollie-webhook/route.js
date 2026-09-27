@@ -1,4 +1,4 @@
-import { mail, mollie, tabel } from '@/lib/bestelling';
+import { klantmailBetaald, mail, mollie, tabel } from '@/lib/bestelling';
 
 // Mollie stuurt alleen een id; de status halen we zelf op, dus een vals verzoek kan niets aanrichten.
 export async function POST(req) {
@@ -8,11 +8,18 @@ export async function POST(req) {
     const b = await mollie(`payments/${id}`);
     if (b.status === 'paid') {
       const m = b.metadata ?? {};
-      await mail({
-        onderwerp: `Betaald: @${m.account} · € ${b.amount.value} · proef sturen`,
-        html: `<h2>Bestelling betaald (${b.id})</h2>${tabel(Object.entries(m))}`,
-        antwoordNaar: m.email,
-      });
+      await Promise.all([
+        mail({
+          onderwerp: `Betaald: @${m.account} · € ${b.amount.value} · proef sturen`,
+          html: `<h2>Bestelling betaald (${b.id})</h2>${tabel(Object.entries(m))}`,
+          antwoordNaar: m.email,
+        }),
+        m.email && mail({
+          aan: m.email,
+          onderwerp: 'Je betaling is binnen',
+          html: klantmailBetaald({ naam: m.naam, bedrag: b.amount.value, omschrijving: b.description }),
+        }),
+      ]);
     }
   } catch (e) {
     console.error(e);

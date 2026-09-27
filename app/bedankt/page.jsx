@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 const TEKST = {
-  paid: ['Betaald. Dank je wel!', 'Je proef komt binnen één werkdag in je mail. Keur je hem goed, dan gaan we maken.'],
+  paid: ['Betaald. Dank je wel!', 'Een afbeelding van je ontwerp staat al in je mail. Je digitale proef volgt binnen één werkdag, en keur je hem goed, dan gaan we maken.'],
   open: ['Je betaling is nog niet rond.', 'Rond je betaling af, dan gaan we voor je aan de slag.'],
   pending: ['Je betaling wordt verwerkt.', 'Dit duurt meestal een paar seconden. Deze pagina ververst vanzelf.'],
   canceled: ['Je hebt de betaling geannuleerd.', 'Je ontwerp staat nog klaar. Probeer het opnieuw wanneer je wilt.'],
