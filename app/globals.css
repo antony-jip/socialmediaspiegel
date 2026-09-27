@@ -75,16 +75,18 @@ main { min-height: 60vh; }
 /* ---------- merk ---------- */
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
 .beeldmerk { width: 34px; height: 34px; flex: none; }
-.logo__woord { font: 400 clamp(19px, 2.2vw, 23px)/1 var(--display); letter-spacing: -0.01em; }
-.logo__spiegel { position: relative; color: var(--framboos); }
-.logo__spiegel::after {
-  content: attr(data-t); position: absolute; left: 0; top: 100%;
-  transform: scaleY(-1); transform-origin: top;
-  color: var(--framboos); opacity: 0.35;
-  -webkit-mask-image: linear-gradient(to top, #000 0%, transparent 55%);
-  mask-image: linear-gradient(to top, #000 0%, transparent 55%);
-  pointer-events: none;
+.logo__woord { display: inline-flex; align-items: baseline; font: 800 clamp(18px, 2.1vw, 22px)/1 var(--f-merk), sans-serif; letter-spacing: -0.045em; white-space: nowrap; }
+.logo__woord b { font-weight: 800; color: var(--framboos); }
+/* het spiegelvlak: een haarlijn, daarachter de naam in spiegelschrift die wegvaagt */
+.logo__echo {
+  display: inline-flex; align-items: baseline; color: var(--framboos);
+  transform: scaleX(-1); margin-left: 9px;
+  -webkit-mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent 90%);
+  mask-image: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent 90%);
 }
+.logo__echo i { display: none; }
+.logo__woord b { position: relative; }
+.logo__woord b::after { content: ''; position: absolute; right: -5px; top: -0.1em; bottom: -0.2em; width: 2px; border-radius: 1px; background: var(--framboos); opacity: 0.55; }
 
 /* ---------- kop ---------- */
 .kop {
@@ -116,7 +118,7 @@ main { min-height: 60vh; }
 .profiel__ring .beeldmerk { width: 62%; height: 62%; }
 .profiel__avatar:hover .profiel__ring { box-shadow: 0 0 0 4px var(--vlak), 0 0 0 7px var(--framboos-diep); }
 .profiel__naamrij { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
-.profiel__naamrij h1 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); }
+.profiel__naamrij h1 { font: 800 clamp(1.6rem, 3vw, 2.2rem)/1.1 var(--f-merk), sans-serif; letter-spacing: -0.045em; }
 .profiel__knoppen { display: flex; gap: 8px; }
 .profiel__stats { display: flex; flex-wrap: wrap; gap: 6px 32px; margin: 18px 0; padding: 0; list-style: none; font-size: 16px; }
 .profiel__stats b { font-weight: 700; }
@@ -486,9 +488,8 @@ main { min-height: 60vh; }
 .voet__regel nav { display: flex; flex-wrap: wrap; gap: 6px 20px; }
 .voet__regel a { color: #fff; text-decoration: none; }
 .voet__regel a:hover { text-decoration: underline; }
-.voet .logo__spiegel, .voet .logo__spiegel::after { color: #f6a7c8; }
-.voet .beeldmerk rect { fill: #3a2f52; }
-.voet .beeldmerk text:first-of-type { fill: #fff; }
+.voet .logo__woord b, .voet .logo__echo { color: #f6a7c8; }
+.voet .logo__woord b::after { background: #f6a7c8; }
 
 .mobielbalk { display: none; }
 
