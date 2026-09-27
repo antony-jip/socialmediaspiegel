@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import Spiegel from '@/components/Spiegel';
 import { Beeldmerk } from '@/components/Merk';
-import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
+import { euro, formaatVan, KADERS, kaderKleur, kaderNaam, LED, OPHANGEN, ophangVan, prijsVan, START, VANAF, VORMEN } from '@/lib/spiegel';
 import { RUIMTES } from '@/lib/inhoud';
 
 const OntwerpCtx = createContext(null);
@@ -260,14 +260,14 @@ export function Terugverdienen() {
 }
 
 /* ---------------------------------------------------------------- ontwerper */
-function Keuze({ label, waarde, opties, onKies }) {
+function Keuze({ label, waarde, opties, onKies, uit = [] }) {
   return (
     <fieldset className="keuze">
       <legend>{label}</legend>
       <div className="keuze__rij">
         {Object.entries(opties).map(([id, tekst]) => (
-          <label key={id} className={waarde === id ? 'is-aan' : ''}>
-            <input type="radio" name={label} value={id} checked={waarde === id} onChange={() => onKies(id)} />
+          <label key={id} className={`${waarde === id ? 'is-aan' : ''}${uit.includes(id) ? ' is-uit' : ''}`}>
+            <input type="radio" name={label} value={id} checked={waarde === id} disabled={uit.includes(id)} onChange={() => onKies(id)} />
             {tekst}
           </label>
         ))}
@@ -437,13 +437,29 @@ export function Ontwerper() {
         <div className="groep">
           <h3>Kleur en licht</h3>
           <Kaderkleur />
-          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} />
+          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} uit={cfg.ophang === 'lijm' ? ['warm', 'koel', 'rgb'] : []} />
+          {cfg.ophang === 'lijm' && <p className="keuze__noot">Glow kan alleen met afstandhouders: de gloed heeft 4 cm ruimte achter de spiegel nodig.</p>}
+        </div>
+
+        <div className="groep">
+          <h3>Ophangen</h3>
+          <Keuze
+            label="Hoe hang je hem op?"
+            waarde={cfg.ophang}
+            opties={Object.fromEntries(Object.entries(OPHANGEN).map(([id, o]) => [id, o.prijs ? `${o.label} +${euro(o.prijs)}` : `${o.label} · inbegrepen`]))}
+            onKies={(v) => { zet('ophang', v); if (v === 'lijm') zet('led', 'uit'); }}
+          />
+          <p className="keuze__noot">{ophangVan(cfg).uitleg}. {{
+            afstand: 'Muurvast: je kunt hem er niet aftillen of afstoten.',
+            koker: 'Makkelijk te verhangen: je tilt hem er zo weer af.',
+            lijm: 'Snel en zonder boren, maar hij gaat er daarna niet meer netjes af.',
+          }[cfg.ophang || 'afstand']}</p>
         </div>
 
         <div className="totaal">
           <div>
             <span className="totaal__prijs">{euro(prijsVan(cfg))}</span>
-            <span className="totaal__uitleg">{formaatVan(cfg).maat} · {LED[cfg.led].label} · incl. btw</span>
+            <span className="totaal__uitleg">{formaatVan(cfg).maat} · {LED[cfg.led].label} · {ophangVan(cfg).label} · incl. btw</span>
             <span className="totaal__terug">Terugverdiend na {klantenNodig(prijsVan(cfg), 45)} nieuwe klanten van € 45</span>
           </div>
           <a className="knop knop--framboos knop--groot" href="#bestellen">Bestel je spiegel</a>
@@ -524,6 +540,7 @@ export function Bestellen() {
             <div><dt>Model</dt><dd>{VORMEN[cfg.vorm].label}, {formaatVan(cfg).maat}</dd></div>
             <div><dt>Kader</dt><dd>{kaderNaam(cfg)}</dd></div>
             <div><dt>Licht</dt><dd>{LED[cfg.led].label}</dd></div>
+            <div><dt>Ophangen</dt><dd>{ophangVan(cfg).label}</dd></div>
             <div><dt>Logo</dt><dd>{logo ? 'Geüpload' : 'Nog geen logo'}</dd></div>
             <div className="bon__totaal"><dt>Totaal</dt><dd>{euro(prijsVan(cfg))}</dd></div>
           </dl>

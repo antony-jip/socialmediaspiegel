@@ -442,6 +442,8 @@ a.tegel { display: block; }
 }
 .keuze__rij label:hover { background: #efe9f8; }
 .keuze__rij label.is-aan { background: var(--inkt); color: #fff; box-shadow: none; }
+.keuze__rij label.is-uit { opacity: 0.4; cursor: not-allowed; }
+.keuze__noot { font-size: 13px; color: var(--grijs); }
 .keuze input { position: absolute; opacity: 0; pointer-events: none; }
 .keuze__rij label:has(input:focus-visible), .staal:has(input:focus-visible) { outline: 2px solid var(--framboos); outline-offset: 2px; }
 .stalen { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
@@ -517,7 +519,9 @@ a.tegel { display: block; }
 .ds-glas { fill: #e6ebf1; stroke: #8fa0b3; stroke-width: 1.2; }
 .ds-boven { fill: var(--framboos); }
 .ds-onder { fill: #d9d3e4; stroke: #a79cbd; stroke-width: 1; }
-.ds-koker { fill: #eceaf1; stroke: var(--inkt); stroke-width: 1.5; }
+.ds-koker { fill: #dfe3e8; stroke: #7b838e; stroke-width: 1.5; }
+.ds-pad { fill: #231b33; }
+.ds-bout { fill: #9aa2ac; }
 .ds-koker-binnen { fill: var(--vlak); stroke: #b9b3c6; stroke-width: 1; }
 .ds-led { fill: #ffb86b; }
 .ds-rand { fill: #17131f; }
@@ -529,7 +533,7 @@ a.tegel { display: block; }
 .ds-staal--glas { background: #e6ebf1; box-shadow: inset 0 0 0 1px #8fa0b3; }
 .ds-staal--boven { background: var(--framboos); }
 .ds-staal--onder { background: #d9d3e4; box-shadow: inset 0 0 0 1px #a79cbd; }
-.ds-staal--koker { background: #eceaf1; box-shadow: inset 0 0 0 1.5px var(--inkt); }
+.ds-staal--dop { background: #c9ced6; box-shadow: inset 0 0 0 1.5px #7b838e; }
 .ds-staal--led { background: #ffb86b; }
 .ds-staal--rand { background: #17131f; }
 
@@ -545,11 +549,14 @@ a.tegel { display: block; }
 .ophangen { padding: 72px var(--rand) 88px; background: var(--mint); }
 .ophangen__kop h2 { margin: 8px 0 12px; }
 .ophangen__kop p { max-width: 50ch; color: #4a4258; }
-.ophangen__stappen { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: ophang; }
-.ophangen__stappen li { counter-increment: ophang; padding: 22px; border-radius: 20px; background: var(--vlak); }
-.ophangen__stappen li::before { content: counter(ophang); display: grid; place-items: center; width: 34px; height: 34px; margin-bottom: 14px; border-radius: 50%; background: var(--framboos); color: #fff; font-weight: 800; }
-.ophangen__stappen h3 { margin-bottom: 6px; }
-.ophangen__stappen p { color: #4a4258; font-size: 15px; }
+.ophangen__raster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+.ophangen__manier { padding: 26px; border-radius: 22px; background: var(--vlak); }
+.ophangen__manier > p { margin: 6px 0 18px; color: #4a4258; font-size: 15px; }
+.ophangen__stappen { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: ophang; }
+.ophangen__stappen li { counter-increment: ophang; display: grid; grid-template-columns: 30px 1fr; column-gap: 12px; }
+.ophangen__stappen li::before { content: counter(ophang); grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--framboos); color: #fff; font-weight: 800; font-size: 14px; }
+.ophangen__stappen b { font-weight: 800; }
+.ophangen__stappen span { color: #4a4258; font-size: 15px; }
 
 /* ---------- vragen-raster ---------- */
 .vragen-raster { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: clamp(28px, 5vw, 72px); align-items: start; padding: 72px var(--rand) 88px; }
@@ -635,7 +642,7 @@ a.tegel { display: block; }
 
   .verhaal, .terug, .bestellen { grid-template-columns: minmax(0, 1fr); }
   .paginakop--beeld, .maken__raster, .maken__doorsnede, .vragen-raster, .zakelijk { grid-template-columns: minmax(0, 1fr); }
-  .ophangen__stappen { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .ophangen__raster { grid-template-columns: minmax(0, 1fr); }
   .vragen__kaart { position: static; }
   .maken__foto { aspect-ratio: 4 / 3; }
   .verhaal { justify-items: center; }
@@ -658,7 +665,6 @@ a.tegel { display: block; }
   .totaal .knop { width: 100%; }
   .bon { grid-template-columns: 76px minmax(0, 1fr); }
   .maken__rij { grid-template-columns: minmax(0, 1fr); }
-  .ophangen__stappen { grid-template-columns: minmax(0, 1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
   .spiegel__hart, .led--rgb, .spiegel__groothart, .kijker__tekst, .kijker__klein, .slide__tekst { animation: none; }

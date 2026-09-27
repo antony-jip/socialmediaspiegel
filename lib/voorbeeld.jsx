@@ -1,5 +1,5 @@
 import { ImageResponse } from 'next/og';
-import { formaatVan, kaderKleur, kaderNaam, kort, LED, opKader, VORMEN } from '@/lib/spiegel';
+import { formaatVan, kaderKleur, kaderNaam, kort, LED, ophangVan, opKader, VORMEN } from '@/lib/spiegel';
 
 // Maakt een PNG van het ontwerp, voor de bevestigingsmail en de werkplaats. Zelfde opbouw als de preview op de site.
 const GLOED = {
@@ -78,7 +78,7 @@ export async function maakVoorbeeld(cfg, logo) {
 
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 30, fontWeight: 800 }}>{VORMEN[cfg.vorm].label} · {formaatVan(cfg).maat}</span>
-          <span style={{ fontSize: 22, color: '#6e6680' }}>Kader {kaderNaam(cfg).toLowerCase()} · {LED[cfg.led].label} · echt spiegelglas</span>
+          <span style={{ fontSize: 22, color: '#6e6680' }}>Kader {kaderNaam(cfg).toLowerCase()} · {LED[cfg.led].label} · {ophangVan(cfg).label.toLowerCase()}</span>
         </div>
       </div>
     ),

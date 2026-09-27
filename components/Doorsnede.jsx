@@ -4,8 +4,8 @@ const DELEN = [
   ['boven', 'Bovenplaat met folie in jouw kleur'],
   ['onder', 'Onderplaat Dibond 3 mm'],
   ['rand', 'Zwarte rubberen rand rondom'],
-  ['koker', 'Aluminium koker, houdt hem van de muur'],
-  ['led', 'Glow: LED-strip rondom (optie)'],
+  ['dop', 'Klikbevestiging: dopje in de muur, 40 mm'],
+  ['led', 'Glow: LED-strip rondom op de achterkant (optie)'],
 ];
 
 export default function Doorsnede() {
@@ -21,14 +21,15 @@ export default function Doorsnede() {
             <stop offset="1" stopColor="#ffb86b" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d="M252 150 L10 238 L150 238 L252 176 Z" fill="url(#ds-gloed)" />
+        <path d="M60 79 L0 238 L150 238 L104 79 Z" fill="url(#ds-gloed)" />
         <rect className="ds-glas" x="140" y="40" width="400" height="16" rx="1" />
         <rect className="ds-boven" x="20" y="40" width="118" height="16" rx="1" />
         <rect className="ds-onder" x="20" y="60" width="520" height="12" rx="1" />
         <path className="ds-rand" d="M12 34 H44 V40 H20 V72 H44 V78 H12 Z" />
-        <rect className="ds-koker" x="260" y="76" width="80" height="162" rx="2" />
-        <rect className="ds-koker-binnen" x="268" y="84" width="64" height="146" rx="1" />
-        <rect className="ds-led" x="251" y="136" width="9" height="40" rx="2" />
+        <rect className="ds-pad" x="206" y="72" width="68" height="6" rx="1" />
+        <rect className="ds-koker" x="206" y="78" width="68" height="160" rx="3" />
+        <rect className="ds-bout" x="233" y="160" width="14" height="78" />
+        <rect className="ds-led" x="60" y="72" width="44" height="7" rx="2" />
         <rect x="0" y="238" width="560" height="22" fill="url(#ds-muur)" />
         <line x1="0" y1="238" x2="560" y2="238" stroke="var(--inkt)" strokeWidth="1.5" />
         <g className="ds-maat">
