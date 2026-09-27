@@ -549,14 +549,16 @@ a.tegel { display: block; }
 .ophangen { padding: 72px var(--rand) 88px; background: var(--mint); }
 .ophangen__kop h2 { margin: 8px 0 12px; }
 .ophangen__kop p { max-width: 50ch; color: #4a4258; }
-.ophangen__raster { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 32px; }
+.ophangen__raster { display: grid; gap: 16px; margin-top: 32px; }
 .ophangen__manier { padding: 26px; border-radius: 22px; background: var(--vlak); }
-.ophangen__manier > p { margin: 6px 0 18px; color: #4a4258; font-size: 15px; }
-.ophangen__stappen { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: ophang; }
-.ophangen__stappen li { counter-increment: ophang; display: grid; grid-template-columns: 30px 1fr; column-gap: 12px; }
-.ophangen__stappen li::before { content: counter(ophang); grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--framboos); color: #fff; font-weight: 800; font-size: 14px; }
+.ophangen__manier > p { margin: 6px 0 20px; color: #4a4258; font-size: 15px; }
+.ophangen__stappen { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; counter-reset: ophang; }
+.ophangen__stappen li { counter-increment: ophang; display: grid; gap: 6px; align-content: start; }
+.ophangen__beeld { position: relative; display: block; margin-bottom: 8px; }
+.ophangen__beeld svg { display: block; width: 100%; height: auto; }
+.ophangen__beeld::before { content: counter(ophang); position: absolute; left: 10px; top: 10px; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--framboos); color: #fff; font-weight: 800; font-size: 13px; }
 .ophangen__stappen b { font-weight: 800; }
-.ophangen__stappen span { color: #4a4258; font-size: 15px; }
+.ophangen__stappen li > span:last-child { color: #4a4258; font-size: 14px; }
 
 /* ---------- vragen-raster ---------- */
 .vragen-raster { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr); gap: clamp(28px, 5vw, 72px); align-items: start; padding: 72px var(--rand) 88px; }
@@ -642,7 +644,7 @@ a.tegel { display: block; }
 
   .verhaal, .terug, .bestellen { grid-template-columns: minmax(0, 1fr); }
   .paginakop--beeld, .maken__raster, .maken__doorsnede, .vragen-raster, .zakelijk { grid-template-columns: minmax(0, 1fr); }
-  .ophangen__raster { grid-template-columns: minmax(0, 1fr); }
+  .ophangen__stappen { grid-template-columns: minmax(0, 1fr); }
   .vragen__kaart { position: static; }
   .maken__foto { aspect-ratio: 4 / 3; }
   .verhaal { justify-items: center; }

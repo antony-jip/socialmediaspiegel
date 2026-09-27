@@ -437,8 +437,8 @@ export function Ontwerper() {
         <div className="groep">
           <h3>Kleur en licht</h3>
           <Kaderkleur />
-          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} uit={cfg.ophang === 'lijm' ? ['warm', 'koel', 'rgb'] : []} />
-          {cfg.ophang === 'lijm' && <p className="keuze__noot">Glow kan alleen met afstandhouders: de gloed heeft 4 cm ruimte achter de spiegel nodig.</p>}
+          <Keuze label="Licht" waarde={cfg.led} opties={ledOpties} onKies={(v) => zet('led', v)} uit={cfg.ophang === 'plak' ? ['warm', 'koel', 'rgb'] : []} />
+          {cfg.ophang === 'plak' && <p className="keuze__noot">Glow kan alleen met de ophangrail: de gloed heeft 4 cm ruimte achter de spiegel nodig.</p>}
         </div>
 
         <div className="groep">
@@ -447,13 +447,12 @@ export function Ontwerper() {
             label="Hoe hang je hem op?"
             waarde={cfg.ophang}
             opties={Object.fromEntries(Object.entries(OPHANGEN).map(([id, o]) => [id, o.prijs ? `${o.label} +${euro(o.prijs)}` : `${o.label} · inbegrepen`]))}
-            onKies={(v) => { zet('ophang', v); if (v === 'lijm') zet('led', 'uit'); }}
+            onKies={(v) => { zet('ophang', v); if (v === 'plak') zet('led', 'uit'); }}
           />
           <p className="keuze__noot">{ophangVan(cfg).uitleg}. {{
-            afstand: 'Muurvast: je kunt hem er niet aftillen of afstoten.',
-            koker: 'Makkelijk te verhangen: je tilt hem er zo weer af.',
-            lijm: 'Snel en zonder boren, maar hij gaat er daarna niet meer netjes af.',
-          }[cfg.ophang || 'afstand']}</p>
+            rail: 'Alles zit in de doos: schroeven, pluggen, een boortje en een waterpasje in de rail.',
+            plak: 'Werkt het best op een gladde, stevige muur. Na 24 uur zit hij vast, en daarna gaat hij er niet meer netjes af.',
+          }[cfg.ophang || 'rail']}</p>
         </div>
 
         <div className="totaal">

@@ -18,7 +18,9 @@ FREES_R = 1.5                                # venster frezen met Ø 3 mm: binne
 VENSTER = (MX - .5, MY - .5, MW + 1, MH + 1, FREES_R)  # uitsparing bovenplaat, 0,5 mm speling rondom
 KI, KB, KD = 60, 20, 40                     # koker: inspringen, breedte, diepte
 FX, FY, FW, FH = KI, KI, W - 2 * KI, H - 2 * KI
-KLIK = [(100, 100), (500, 100), (100, 1100), (500, 1100)]  # klikbevestigingen achterkant, h.o.h. 400 × 1000
+RAIL = (100, 80, 400, 30)                    # ophangrail achterkant: x, y, lengte, hoogte (spiegeldeel)
+NOK = [(100, 1100), (500, 1100)]              # afstandsnokjes 40 mm onderaan
+KLIK = [(100, 1100), (500, 1100)]             # (doorsnede snijdt door een nokje)
 SLEUTEL = [(150, 70), (450, 70)]            # koker-variant: sleutelgaten, h.o.h. 300
 AFSTAND = 40                                 # achterkant spiegel tot muur
 LEDIN = 15                                   # LED-strip op achterkant, uit de rand
@@ -40,7 +42,7 @@ gewicht = (
     plaat_m2 * DIBOND3_KG_M2
     + (plaat_m2 - VENSTER[2] * VENSTER[3] / 1e6) * DIBOND4_KG_M2
     + MW * MH / 1e6 * GLAS_KG_M2
-    + 4 * 0.05  # klikbevestigingen
+    + 0.5  # rail + nokjes
     + 0.6  # led, profiel, plaatjes, lijm
 )
 led_w = omtrek_led * LED_W_M
@@ -167,14 +169,14 @@ def blad1():
     o.append(rrect(0, 0, W, H, R, "plaat", s, ox2, oy2))
     o.append(rrect(MX, MY, MW, MH, MR, "onzicht", s, ox2, oy2))
     o.append(rrect(LEDIN, LEDIN, W - 2 * LEDIN, H - 2 * LEDIN, R - LEDIN, "led", s, ox2, oy2))
-    for x, y in KLIK:
+    o.append(rrect(RAIL[0], RAIL[1], RAIL[2], RAIL[3], 2, "koker", s, ox2, oy2))
+    for x, y in NOK:
         o.append(f'<circle cx="{ox2 + x * s}" cy="{oy2 + y * s}" r="1.5" class="koker"/>')
     o.append(f'<circle cx="{ox2 + KABEL[0] * s}" cy="{oy2 + KABEL[1] * s}" r=".8" fill="#111"/>')
-    o.append(maat_h(ox2 + KLIK[0][0] * s, ox2 + KLIK[1][0] * s, oy2 - 4, "400 h.o.h.", oy2 + KLIK[0][1] * s))
-    o.append(maat_v(oy2 + KLIK[0][1] * s, oy2 + KLIK[2][1] * s, ox2 + W * s + 5, "1000 h.o.h.", ox2 + KLIK[1][0] * s))
-    o.append(maat_v(oy2, oy2 + KLIK[0][1] * s, ox2 - 5, "100", ox2 + KLIK[0][0] * s))
-    o.append(maat_h(ox2, ox2 + KLIK[0][0] * s, oy2 + H * s + 5, "100", oy2 + KLIK[2][1] * s))
-    o.append(tekst(ox2, oy2 + H * s + 12, "grijs = 4 klikbevestigingen (plaatdeel verlijmd)", "klein"))
+    o.append(maat_h(ox2 + RAIL[0] * s, ox2 + (RAIL[0] + RAIL[2]) * s, oy2 - 4, "rail 400", oy2 + RAIL[1] * s))
+    o.append(maat_v(oy2, oy2 + RAIL[1] * s, ox2 - 5, "80", ox2 + RAIL[0] * s))
+    o.append(maat_h(ox2, ox2 + NOK[0][0] * s, oy2 + H * s + 5, "100", oy2 + NOK[0][1] * s))
+    o.append(tekst(ox2, oy2 + H * s + 12, "grijs = ophangrail boven + 2 afstandsnokjes onder", "klein"))
     o.append(tekst(ox2, oy2 + H * s + 15.5, "oranje = optionele LED-strip, 15 mm uit de rand", "klein"))
     o.append(tekst(ox2, oy2 + H * s + 19, "stip onder = kabeluitgang", "klein"))
 
@@ -210,7 +212,7 @@ def blad1():
         (dx + 12, y_voor + .2, "folie + laminaat, bovenplaat Dibond 4 mm"),
         (dx + 100, y_onder + 1.5, "onderplaat Dibond 3 mm"),
         (dx - 1, y_voor + 6, "rubber U-profiel met klemkern, 8 mm"),
-        (dx + (KLIK[0][0] + 12) * d, y_kok + 20, "klikbevestiging: plaatdeel + wanddeel"),
+        (dx + (KLIK[0][0] + 12) * d, y_kok + 20, "afstandsnokje 40 mm (rail boven: zelfde diepte)"),
         (dx + (LEDIN + 5) * d, y_kok + 1, "optie: LED COB 24 V op onderplaat"),
     ]
     for i, (tx, ty, t) in enumerate(lab):
@@ -228,15 +230,15 @@ def blad1():
         ("2", "1", "Bovenplaat Dibond 4 mm, 600 × 1200, R72, venster 541 × 861, frees Ø 3"),
         ("3", "1", "Bedrukte cast-folie + laminaat op bovenplaat, vóór frezen (of UV-print)"),
         ("4", "1", "Spiegel 4 mm zilver + veiligheidsfolie EN 12600, 540 × 860, rechte hoeken, randen geslepen"),
-        ("5", "4", "Klikbevestiging: plaatdeel + wanddeel met schroef en plug, afstand 40 mm"),
+        ("5", "1", "Ophangrail alu Z-profiel 400 mm: spiegeldeel verlijmd, muurdeel met waterpasje, 40 mm"),
         ("6", f"{nl(omtrek_led, 1)} m", "Optie: LED COB 24 V ± 10 W/m op achterkant onderplaat; warm, koel of RGB"),
         ("7", "1", f"Optie: voeding 24 V 48–60 W CE + schakelaar, bij RGB controller + afstandsbediening"),
-        ("8", "1", "Optie lijmset (i.p.v. 5): VHB-tape + koker montagekit, plat op de muur, geen Glow"),
+        ("8", "1", "Optie plak-klaar (i.p.v. 5, 13): VHB-tape vooraf op achterkant met folie, geen Glow"),
         ("9", "1", "Spiegelkit (vrijgegeven door folieleverancier) + VHB-tape 1 mm"),
-        ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, plaatdelen klik op onderplaat"),
-        ("11", "1", "Montagemal B, geplot op ware grootte (montagemal-B-60x120.pdf)"),
+        ("10", "1", "VHB/MS-polymeer: bovenplaat op onderplaat, rail en nokjes op onderplaat"),
+        ("11", "1", "In de doos: 2 schroeven + pluggen, boortje Ø 6, borgschroef. Geen boormal: de rail is de mal"),
         ("12", f"{nl(omtrek_plaat, 1)} m", "Zwart rubber U-profiel met stalen klemkern, voor plaatrand 8 mm"),
-        ("13", "1", "Optie koker (i.p.v. 5): alu koker 40×20×2, 480 × 1080, 2 sleutelgaten h.o.h. 300"),
+        ("13", "2", "Afstandsnokje 40 mm, verlijmd onderaan; één met lipje voor de borgschroef"),
     ]
     for i, (nr, aantal, oms) in enumerate(regels):
         yy = sy + 7 + i * 5.4
@@ -267,21 +269,16 @@ def blad2():
     o.append(tekst(ax, ay + H * s + 12, "4 mm Dibond met folie, venster = spiegel + 1 mm", "klein"))
     o.append(tekst(ax, ay + H * s + 15.5, "zwart = aanslagnokken op werktafel (links + boven)", "klein"))
 
-    # montagemal B
+    # rail: geen montagemal nodig
     bx, by = 118, 42
-    o.append(titel(bx, by - 12, "Montagemal B · voor de klant", "1:10"))
+    o.append(titel(bx, by - 12, "Achterkant · rail en nokjes", "1:10"))
     o.append(rrect(0, 0, W, H, R, "onzicht", s, bx, by))
-    o.append(f'<line x1="{bx + W * s / 2}" y1="{by - 3}" x2="{bx + W * s / 2}" y2="{by + H * s + 3}" class="as"/>')
-    for yy in (KLIK[0][1], KLIK[2][1]):
-        o.append(f'<line x1="{bx - 3}" y1="{by + yy * s}" x2="{bx + W * s + 3}" y2="{by + yy * s}" class="as"/>')
-    for x, y in KLIK:
-        o.append(f'<circle cx="{bx + x * s}" cy="{by + y * s}" r="1" class="gat"/>')
-    o.append(maat_h(bx + KLIK[0][0] * s, bx + KLIK[1][0] * s, by - 5, "400", by + KLIK[0][1] * s))
-    o.append(maat_v(by + KLIK[0][1] * s, by + KLIK[2][1] * s, bx + W * s + 5, "1000", bx + KLIK[1][0] * s))
-    o.append(tekst(bx, by + H * s + 6, "Geplot 1:1 (montagemal-B-60x120.pdf). Ook als plaatsingsmal", "klein"))
-    o.append(tekst(bx, by + H * s + 9.5, "voor de plaatdelen in de werkplaats: zelfde 4 kruisjes.", "klein"))
-    o.append(tekst(bx, by + H * s + 16, "Ophangvarianten: klik (standaard, deze tekening), koker met", "klein"))
-    o.append(tekst(bx, by + H * s + 19.5, "2 sleutelgaten (stuklijst 13, boormal-koker-A3.pdf), lijmset (8).", "klein"))
+    o.append(rrect(RAIL[0], RAIL[1], RAIL[2], RAIL[3], 2, "koker", s, bx, by))
+    for x, y in NOK:
+        o.append(f'<circle cx="{bx + x * s}" cy="{by + y * s}" r="1.5" class="koker"/>')
+    o.append(tekst(bx, by + H * s + 6, "Rail en nokjes verlijmen met de bovenplaat-nokken als aanslag.", "klein"))
+    o.append(tekst(bx, by + H * s + 9.5, "Klant: muurrail met waterpasje, 2 schroeven, spiegel erop, klaar.", "klein"))
+    o.append(tekst(bx, by + H * s + 16, "Varianten: ophangrail (standaard) of plak-klaar (stuklijst 8).", "klein"))
 
     # werkvolgorde
     wx, wy = 290, 42
@@ -291,12 +288,12 @@ def blad2():
         ["Frezen: onderplaat contour, bovenplaat contour + venster", "door de folie heen. Venster met Ø 3 mm, niet dikker."],
         ["Onderplaat tegen de nokken, bovenplaat erop met VHB,", "randen gelijk tegen dezelfde nokken."],
         ["Spiegel in het venster: VHB-stroken + verticale rupsen", "spiegelkit, niet vol-vlaks. Voorvlak gelijk met folie."],
-        ["Omdraaien, montagemal B erop tegen de nokken, 4 plaatdelen", "van de klikbevestiging op de kruisjes verlijmen."],
+        ["Omdraaien, spiegeldeel van de rail bovenaan en 2 nokjes", "onderaan verlijmen (maten achteraanzicht)."],
         ["Rubber U-profiel om de buitenrand klemmen: start en eind", "onderaan in het midden, naad met een druppel kit."],
         ["24 uur laten uitharden voor transport."],
         ["Bij licht: COB-strip rondom op achterkant, 15 mm uit de rand,", "hoeken doorverbinden, kabel onderaan in het midden."],
         ["Bij licht: test in donkere ruimte op 40 mm van een witte", "wand: gloed gelijkmatig, hoeken zonder gat in de gloed."],
-        ["Verpakken met hoekbeschermers + montagemal, 4 wanddelen", "en pluggen erbij (of de lijmset)."],
+        ["Verpakken met hoekbeschermers + muurrail, schroeven,", "pluggen, boortje en borgschroef. Plak-klaar: tape erop."],
     ]
     rij = 0
     for i, regels in enumerate(stappen, 1):
@@ -309,11 +306,11 @@ def blad2():
     ny = wy + rij * 5 + 10
     o.append(tekst(wx, ny, "Nog te beslissen", "kop"))
     open_ = [
-        "Type klikbevestiging kiezen: houdkracht per stuk ≥ 10 kg.",
+        "Railprofiel kiezen: Z-profiel met 40 mm totale diepte.",
         "Hoekverbinding strip: connector of solderen.",
         "Leverancier glas + folie: kit laten vrijgeven.",
         "Rand: rubber zwart (standaard) of lakken, op het proefstuk kiezen.",
-        "Proefstuk: lichtbeeld op 40 mm, zo nodig klik van 50 mm.",
+        "Proefstuk: lichtbeeld op 40 mm, zo nodig 50 mm diep.",
     ]
     for i, t in enumerate(open_):
         o.append(tekst(wx, ny + 7 + i * 5, t, "t"))
@@ -412,18 +409,6 @@ def montagemal():
 
 
 def main():
-    bk = f"<!doctype html><meta charset=utf-8><style>{CSS}</style>{boormal_koker()}"
-    (UIT / "boormal-koker.html").write_text(bk)
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                    f"--print-to-pdf={UIT / 'boormal-koker-A3.pdf'}", (UIT / "boormal-koker.html").as_uri()],
-                   check=True, capture_output=True)
-
-    mal = f"<!doctype html><meta charset=utf-8><style>{CSS.replace('size: 420mm 297mm', f'size: {W}mm {H}mm').replace('.m { font-size: 2.3px; }', '.m { font-size: 14px; font-weight: 700; }')}svg{{width:{W}mm;height:{H}mm}}</style>{montagemal()}"
-    (UIT / "montagemal.html").write_text(mal)
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                    f"--print-to-pdf={UIT / 'montagemal-B-60x120.pdf'}", (UIT / "montagemal.html").as_uri()],
-                   check=True, capture_output=True)
-
     html = f"<!doctype html><meta charset=utf-8><style>{CSS}</style>{blad1()}{blad2()}"
     (UIT / "werktekening.html").write_text(html)
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
@@ -433,7 +418,6 @@ def main():
     buiten = (0, 0, W, H, R)
     dxf("frees-dibond-onder-3mm.dxf", {"FREES_BUITEN": [buiten]})
     dxf("frees-dibond-boven-4mm.dxf", {"FREES_BUITEN": [buiten], "FREES_BINNEN": [VENSTER]})
-    dxf("montagemal-B.dxf", {"CONTOUR": [buiten], "GATEN": [("cirkel", x, y, 4) for x, y in KLIK]})
     svg11("frees-dibond-onder-3mm.svg", [(rrect_pad(*buiten), "#000")])
     svg11("frees-dibond-boven-4mm.svg", [(rrect_pad(*buiten), "#000"), (rrect_pad(*VENSTER), "#f00")])
     print(f"gewicht {gewicht:.1f} kg · led {led_w:.0f} W ({nl(omtrek_led, 1)} m)")

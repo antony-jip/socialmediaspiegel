@@ -23,7 +23,7 @@ export async function POST(req) {
         locale: 'nl_NL',
         metadata: {
           naam: contact.naam?.slice(0, 80), email: contact.email?.slice(0, 120), telefoon: contact.telefoon?.slice(0, 30),
-          bedrijf: contact.bedrijf?.slice(0, 80), account: cfg.naam, vorm: cfg.vorm, formaat: cfg.formaat, led: cfg.led, ophang: cfg.ophang || 'afstand',
+          bedrijf: contact.bedrijf?.slice(0, 80), account: cfg.naam, vorm: cfg.vorm, formaat: cfg.formaat, led: cfg.led, ophang: cfg.ophang || 'rail',
           kader: cfg.kader === 'eigen' ? cfg.kaderKleur : cfg.kader, ondertitel: cfg.ondertitel?.slice(0, 40),
         },
       }),

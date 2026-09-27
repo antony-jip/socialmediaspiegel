@@ -27,7 +27,7 @@ export default function OnsVerhaal() {
         <div className="maken__doorsnede">
           <div>
             <h3>Van opzij bekeken</h3>
-            <p>Glas en kader liggen precies vlak. Hij klikt op vier dopjes in je muur en hangt 4 cm van de muur: onzichtbaar, muurvast, en met ruimte voor een zachte gloed rondom.</p>
+            <p>Glas en kader liggen precies vlak. Hij hangt aan een rail, 4 cm van je muur: in drie stappen opgehangen, onzichtbaar, en met ruimte voor een zachte gloed rondom.</p>
           </div>
           <Doorsnede />
         </div>

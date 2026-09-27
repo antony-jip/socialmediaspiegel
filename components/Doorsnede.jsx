@@ -4,7 +4,7 @@ const DELEN = [
   ['boven', 'Bovenplaat met folie in jouw kleur'],
   ['onder', 'Onderplaat Dibond 3 mm'],
   ['rand', 'Zwarte rubberen rand rondom'],
-  ['dop', 'Klikbevestiging: dopje in de muur, 40 mm'],
+  ['dop', 'Ophangrail en afstandsnokjes, 40 mm'],
   ['led', 'Glow: LED-strip rondom op de achterkant (optie)'],
 ];
 
