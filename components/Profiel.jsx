@@ -128,11 +128,11 @@ function maakPosts(cfg) {
     { soort: 'tekst', kleur: 'mint', kop: 'Echt glas.', tekst: 'Spiegelglas van 4 mm met veiligheidsfolie. Scherp, krasvast en makkelijk schoon.', actie: ['story', 'maken', 'Zo maken we hem'] },
     { soort: 'voorbeeld', v: vb.nagels, tekst: 'Je klant ziet het resultaat meteen, en deelt het meteen.' },
     { soort: 'tekst', kleur: 'perzik', kop: `Terug na ${nodig} klanten.`, tekst: `Levert een nieuwe klant je ${euro(PER_KLANT)} op? Dan heb je hem na ${nodig} nieuwe klanten terugverdiend.`, actie: ['story', 'terug', 'Reken mee'] },
-    { soort: 'voorbeeld', v: vb.barber, tekst: 'De Post met zwart kader en warme gloed. Past bij hout, leer en groen.' },
+    { soort: 'voorbeeld', v: vb.barber, tekst: 'De Story met zwart kader en warme gloed. Past bij hout, leer en groen.' },
     { soort: 'jouw' },
     { soort: 'kleuren', kleur: 'lila', kop: 'Jouw huiskleur.', tekst: 'Het kader is bedrukte folie, dus elke kleur kan. Kies uit onze kleuren of geef je eigen kleur op.', actie: ['link', '/ontwerpen', 'Kies je kleur'] },
     { soort: 'voorbeeld', v: vb.wimpers, tekst: 'De Story met lila kader en koele gloed, naast de behandelplek.' },
-    { soort: 'voorbeeld', v: vb.cafe, tekst: 'De Post met boterkleurig kader. Gasten maken er vanzelf een foto, en jouw zaak reist mee.' },
+    { soort: 'voorbeeld', v: vb.cafe, tekst: 'De Story met boterkleurig kader. Gasten maken er vanzelf een foto, en jouw zaak reist mee.' },
     { soort: 'voorbeeld', v: vb.rgb, tekst: 'Glow RGB: ’s avonds kleurt de muur mee. Je kiest de kleur met een afstandsbediening.' },
     { soort: 'voorbeeld', v: vb.kapper, tekst: 'De Story in blush, groot formaat, met warme gloed.' },
   ];
@@ -264,13 +264,13 @@ export default function Profiel() {
           </div>
           <ul className="profiel__stats">
             <li><b>Echt</b> spiegelglas</li>
-            <li><b>2</b> modellen</li>
+            <li><b>3</b> maten</li>
             <li><b>{kleuren}</b> kleuren + je eigen</li>
             <li>vanaf <b>{euro(VANAF)}</b></li>
           </ul>
           <div className="profiel__bio">
             <p className="profiel__titel">Spiegels die gepost willen worden</p>
-            <p>De Story en De Post: echte spiegels van glas in de vorm van een social post, met jouw naam en logo. Geen spiegelfolie, maar 4 mm spiegelglas. Voor salons, barbers en horeca. Gemaakt in onze werkplaats bij Sign Company.</p>
+            <p>De Story: een echte spiegel van glas in de vorm van een telefoon, met jouw naam en logo. Geen spiegelfolie, maar 4 mm spiegelglas. Voor salons, barbers en horeca. Gemaakt in onze werkplaats bij Sign Company.</p>
             <Link className="profiel__link" href="/ontwerpen">socialmediaspiegel.nl/ontwerpen</Link>
           </div>
         </div>

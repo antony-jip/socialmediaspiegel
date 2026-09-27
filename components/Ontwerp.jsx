@@ -430,9 +430,8 @@ export function Ontwerper() {
         </div>
 
         <div className="groep">
-          <h3>Model en maat</h3>
-          <Keuze label="Model" waarde={cfg.vorm} opties={{ telefoon: 'De Story · telefoonvorm', post: 'De Post · postvorm' }} onKies={(v) => zet('vorm', v)} />
-          <Keuze label="Formaat" waarde={cfg.formaat} opties={formaten} onKies={(v) => zet('formaat', v)} />
+          <h3>Maat</h3>
+          <Keuze label="Kies je maat" waarde={cfg.formaat} opties={formaten} onKies={(v) => zet('formaat', v)} />
         </div>
 
         <div className="groep">

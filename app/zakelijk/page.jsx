@@ -6,7 +6,7 @@ export const metadata = { title: 'Zakelijk', description: 'Meerdere spiegels voo
 export default function Zakelijk() {
   return (
     <>
-      <Paginakop label="Zakelijk" titel="Meer spiegels of eentje huren" lead="Voor ketens met meerdere vestigingen, en voor bruiloften, openingen en feesten." kleur="hemel" beeld="/beeld/rgb.jpg" alt="Vrienden maken ’s avonds een groepsselfie voor De Post met RGB-gloed" />
+      <Paginakop label="Zakelijk" titel="Meer spiegels of eentje huren" lead="Voor ketens met meerdere vestigingen, en voor bruiloften, openingen en feesten." kleur="hemel" beeld="/beeld/rgb.jpg" alt="Vrienden maken ’s avonds een selfie voor De Story met RGB-gloed" />
       <section className="zakelijk">
         <article>
           <span className="label">Kopen</span>

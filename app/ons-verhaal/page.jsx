@@ -8,7 +8,7 @@ export const metadata = { title: 'Ons verhaal', description: 'Socialmediaspiegel
 export default function OnsVerhaal() {
   return (
     <>
-      <Paginakop label="Ons verhaal" titel="Reclame die zichzelf deelt" lead="Een bord hangt stil. Een spiegel wordt gedeeld. Daarom maken we spiegels waar je klanten vanzelf een foto van willen." kleur="blush" beeld="/beeld/cafe.jpg" alt="Twee vriendinnen maken een selfie voor De Post in een koffiebar" />
+      <Paginakop label="Ons verhaal" titel="Reclame die zichzelf deelt" lead="Een bord hangt stil. Een spiegel wordt gedeeld. Daarom maken we spiegels waar je klanten vanzelf een foto van willen." kleur="blush" beeld="/beeld/cafe.jpg" alt="Twee vriendinnen maken een selfie voor De Story in een koffiebar" />
       <Verhaal />
       <section className="maken">
         <div className="maken__kop">

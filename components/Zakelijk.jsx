@@ -53,7 +53,7 @@ export default function ZakelijkFormulier() {
           <label className="veld"><span>Plaats</span><input name="plaats" placeholder="Waar is het evenement?" /></label>
         </>
       )}
-      <label className="veld veld--breed"><span>Vertel kort wat je zoekt</span><textarea name="bericht" rows={4} placeholder={soort === 'meer' ? 'Welke modellen, huisstijl, gewenste levering?' : 'Wat voor evenement, hoeveel gasten, binnen of buiten?'} /></label>
+      <label className="veld veld--breed"><span>Vertel kort wat je zoekt</span><textarea name="bericht" rows={4} placeholder={soort === 'meer' ? 'Welke maten, huisstijl, gewenste levering?' : 'Wat voor evenement, hoeveel gasten, binnen of buiten?'} /></label>
       {staat.fase === 'fout' && <p className="fout veld--breed" role="alert">{staat.melding}</p>}
       <button className="knop knop--framboos knop--groot veld--breed" disabled={staat.fase === 'bezig'}>
         {staat.fase === 'bezig' ? 'Aanvraag versturen...' : 'Verstuur je aanvraag'}

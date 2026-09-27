@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Paginakop, Slotblok } from '@/components/Blokken';
 import { VRAGEN } from '@/lib/inhoud';
 
-export const metadata = { title: 'Vragen', description: 'Alles over De Story en De Post: glas, licht, kleur, ophangen, betalen en levertijd.' };
+export const metadata = { title: 'Vragen', description: 'Alles over De Story: glas, licht, kleur, ophangen, betalen en levertijd.' };
 
 export default function Vragen() {
   return (
